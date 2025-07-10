@@ -7,7 +7,6 @@ Universal Recycle revolutionizes how you manage multi-language projects by provi
 [![GitHub stars](https://img.shields.io/github/stars/fraware/upcycle?style=social)](https://github.com/fraware/upcycle)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)
-[![Build Status](https://github.com/fraware/upcycle/workflows/CI/badge.svg)](https://github.com/fraware/upcycle/actions)
 
 ## Key Features
 

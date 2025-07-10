@@ -4,7 +4,6 @@
 
 Universal Recycle revolutionizes how you manage multi-language projects by providing a unified, extensible platform for code modernization, cross-language interoperability, and enterprise-grade build automation.
 
-[![PyPI downloads](https://img.shields.io/pypi/dm/universal-recycle)](https://pypi.org/project/universal-recycle/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)
 

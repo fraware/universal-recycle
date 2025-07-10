@@ -1,0 +1,107 @@
+# Universal Recycle Cache Configuration
+# This file configures the remote caching system for build artifacts and dependencies
+
+# Cache backends configuration
+backends:
+  # Local file-based cache (always available)
+  - type: local
+    cache_dir: .cache/universal_recycle
+    default_ttl: 86400  # 24 hours
+
+  # Redis cache backend (optional)
+  # Uncomment and configure if you have Redis available
+  # - type: redis
+  #   host: localhost
+  #   port: 6379
+  #   db: 0
+  #   password: null  # Set your Redis password if required
+  #   prefix: universal_recycle:
+  #   default_ttl: 3600  # 1 hour
+
+  # AWS S3 cache backend (optional)
+  # Uncomment and configure if you have AWS credentials
+  # - type: s3
+  #   bucket_name: your-universal-recycle-cache
+  #   region_name: us-east-1
+  #   aws_access_key_id: your-access-key
+  #   aws_secret_access_key: your-secret-key
+  #   prefix: universal_recycle/
+  #   default_ttl: 86400  # 24 hours
+
+  # Google Cloud Storage cache backend (optional)
+  # Uncomment and configure if you have GCS credentials
+  # - type: gcs
+  #   bucket_name: your-universal-recycle-cache
+  #   project_id: your-gcp-project
+  #   credentials_file: path/to/service-account.json
+  #   prefix: universal_recycle/
+  #   default_ttl: 86400  # 24 hours
+
+# Cache policies
+policies:
+  # Build artifacts cache policy
+  build_artifacts:
+    enabled: true
+    ttl: 604800  # 7 days
+    max_size_mb: 1024  # 1 GB per repository
+    
+  # Binding generation cache policy
+  binding_generation:
+    enabled: true
+    ttl: 2592000  # 30 days
+    max_size_mb: 512  # 512 MB per repository
+    
+  # Dependency cache policy
+  dependencies:
+    enabled: true
+    ttl: 2592000  # 30 days
+    max_size_mb: 2048  # 2 GB total
+    
+  # File hash cache policy
+  file_hashes:
+    enabled: true
+    ttl: 86400  # 24 hours
+    max_entries: 10000
+
+# Cache invalidation rules
+invalidation:
+  # Invalidate build cache when source files change
+  build_on_source_change: true
+  
+  # Invalidate binding cache when repository commits change
+  binding_on_commit_change: true
+  
+  # Invalidate dependency cache when versions change
+  dependency_on_version_change: true
+  
+  # Clean up expired entries automatically
+  auto_cleanup: true
+  cleanup_interval_hours: 24
+
+# Performance settings
+performance:
+  # Enable compression for large objects
+  compression: true
+  
+  # Enable parallel uploads/downloads
+  parallel_operations: true
+  max_parallel_ops: 4
+  
+  # Connection timeouts (seconds)
+  connect_timeout: 30
+  read_timeout: 60
+  
+  # Retry settings
+  max_retries: 3
+  retry_delay_seconds: 1
+
+# Monitoring and logging
+monitoring:
+  # Enable cache hit/miss logging
+  log_cache_operations: true
+  
+  # Enable performance metrics
+  collect_metrics: true
+  
+  # Cache statistics collection interval (minutes)
+  stats_interval: 60 

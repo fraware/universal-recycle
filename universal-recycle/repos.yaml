@@ -1,0 +1,76 @@
+# Universal Recycle Manifest
+# This file defines repositories to be processed by the recycling system
+
+repositories:
+  - name: python-requests
+    language: python
+    git: https://github.com/psf/requests.git
+    commit: main
+    adapters: [ruff, mypy]
+    description: "Python HTTP library for humans"
+    bindings:
+      - grpc  # Generate gRPC service for HTTP client
+
+  - name: cpp-json
+    language: cpp
+    git: https://github.com/nlohmann/json.git
+    commit: master
+    adapters: [clang-tidy, vcpkg]
+    description: "JSON for Modern C++"
+    bindings:
+      - pybind11  # Generate Python bindings for JSON library
+      - grpc      # Generate gRPC service for JSON operations
+
+  - name: cpp-eigen
+    language: cpp
+    git: https://gitlab.com/libeigen/eigen.git
+    commit: 3.4.0
+    adapters:
+      - clang_tidy
+      - vcpkg_manifest
+    bindings:
+      - pybind11  # Generate Python bindings for linear algebra
+      - grpc      # Generate gRPC service for matrix operations
+
+  - name: python-numpy
+    language: python
+    git: https://github.com/numpy/numpy.git
+    commit: v1.24.3
+    adapters:
+      - ruff
+      - mypy
+      - security_scan
+    bindings:
+      - grpc  # Generate gRPC service for numerical operations
+
+  - name: rust-serde
+    language: rust
+    git: https://github.com/serde-rs/serde.git
+    commit: master
+    adapters: [cargo-check, cargo-fmt]
+    description: "Serialization framework for Rust"
+    bindings:
+      - pyo3      # Generate Python bindings using PyO3
+      - wasm      # Generate WebAssembly bindings
+      - grpc      # Generate gRPC service
+
+  - name: go-gin
+    language: go
+    git: https://github.com/gin-gonic/gin.git
+    commit: master
+    adapters: [go-fmt, go-vet]
+    description: "HTTP web framework for Go"
+    bindings:
+      - cgo        # Generate Python bindings using cgo
+      - grpc       # Generate gRPC service
+
+  - name: wasm-example
+    language: wasm
+    git: https://github.com/rustwasm/wasm-pack-template.git
+    commit: master
+    adapters: [wasm-pack, wasm-bindgen]
+    description: "WebAssembly example project"
+    bindings:
+      - wasm       # Generate WebAssembly bindings
+      - pyo3       # Generate Python bindings
+      - grpc       # Generate gRPC service 

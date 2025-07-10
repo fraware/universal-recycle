@@ -1,0 +1,47 @@
+# Build Profiles Configuration for Universal Recycle
+# This file defines different build configurations for various scenarios
+
+profiles:
+  debug:
+    description: "Debug build with symbols and no optimization"
+    cflags: "-g -O0 -Wall -Wextra"
+    cxxflags: "-g -O0 -Wall -Wextra -std=c++17"
+    env:
+      DEBUG: "1"
+      BUILD_TYPE: "debug"
+      SANITIZE: "address,undefined"
+    
+  release:
+    description: "Release build with optimizations"
+    cflags: "-O3 -DNDEBUG"
+    cxxflags: "-O3 -DNDEBUG -std=c++17"
+    env:
+      DEBUG: "0"
+      BUILD_TYPE: "release"
+      OPTIMIZE: "1"
+    
+  sanitize:
+    description: "Build with sanitizers for debugging"
+    cflags: "-g -O1 -fsanitize=address,undefined -fno-omit-frame-pointer"
+    cxxflags: "-g -O1 -fsanitize=address,undefined -fno-omit-frame-pointer -std=c++17"
+    env:
+      DEBUG: "1"
+      BUILD_TYPE: "sanitize"
+      SANITIZE: "address,undefined"
+    
+  coverage:
+    description: "Build with coverage instrumentation"
+    cflags: "-g -O0 --coverage"
+    cxxflags: "-g -O0 --coverage -std=c++17"
+    env:
+      DEBUG: "1"
+      BUILD_TYPE: "coverage"
+      COVERAGE: "1"
+    
+  custom:
+    description: "Custom build profile - modify as needed"
+    cflags: "-O2 -Wall"
+    cxxflags: "-O2 -Wall -std=c++17"
+    env:
+      DEBUG: "0"
+      BUILD_TYPE: "custom" 

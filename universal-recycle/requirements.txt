@@ -1,0 +1,14 @@
+pyyaml>=6.0
+ruff>=0.1.0
+mypy>=1.5.0
+pybind11>=2.11.0
+grpcio>=1.59.0
+grpcio-tools>=1.59.0
+# Rust tooling (optional)
+maturin>=1.4.0
+# Go tooling (optional)
+cffi>=1.15.0
+# Remote caching (optional)
+redis>=4.5.0
+boto3>=1.28.0
+google-cloud-storage>=2.10.0 

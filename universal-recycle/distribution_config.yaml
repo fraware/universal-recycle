@@ -1,0 +1,121 @@
+# Distribution endpoints configuration for Universal Recycle
+# This file configures how generated packages are distributed to various registries
+
+endpoints:
+  # PyPI distribution for Python packages
+  pypi:
+    type: pypi
+    credentials:
+      # Twine will use ~/.pypirc or environment variables
+      # PYPI_USERNAME and PYPI_PASSWORD
+      username: ${PYPI_USERNAME}
+      password: ${PYPI_PASSWORD}
+    options:
+      repository: pypi  # or "testpypi" for testing
+      skip_existing: true
+      verbose: true
+
+  # npm distribution for WebAssembly packages
+  npm:
+    type: npm
+    credentials:
+      # npm will use ~/.npmrc or npm login
+      registry: https://registry.npmjs.org/
+      scope: ${NPM_SCOPE}  # Optional: for scoped packages
+    options:
+      access: public  # for scoped packages
+      tag: latest
+      dry_run: false
+
+  # vcpkg distribution for C++ packages
+  vcpkg:
+    type: vcpkg
+    credentials:
+      # vcpkg uses git for registry access
+      registry_url: https://github.com/microsoft/vcpkg
+      fork_url: ${VCPKG_FORK_URL}  # Your fork for PRs
+    options:
+      registry_branch: master
+      auto_pr: false  # Whether to create PRs automatically
+      review_required: true
+
+  # crates.io distribution for Rust packages
+  crates_io:
+    type: crates.io
+    credentials:
+      # Cargo will use ~/.cargo/credentials.toml or cargo login
+      api_token: ${CRATES_IO_TOKEN}
+    options:
+      dry_run: false
+      allow_dirty: false
+      verify: true
+
+  # Go modules distribution
+  go_modules:
+    type: go_modules
+    credentials:
+      # Go modules use git for distribution
+      git_remote: origin
+      git_user: ${GIT_USER}
+      git_email: ${GIT_EMAIL}
+    options:
+      auto_tag: true
+      tag_prefix: "v"
+      push_tags: true
+
+# Global distribution settings
+global:
+  # Default endpoints to use for each package type
+  default_endpoints:
+    python: ["pypi"]
+    rust: ["crates_io"]
+    wasm: ["npm"]
+    cpp: ["vcpkg"]
+    go: ["go_modules"]
+  
+  # Whether to require successful validation before distribution
+  require_validation: true
+  
+  # Whether to continue on individual endpoint failures
+  continue_on_failure: false
+  
+  # Timeout for distribution operations (seconds)
+  timeout: 300
+  
+  # Retry configuration
+  retries:
+    max_attempts: 3
+    delay_seconds: 5
+    backoff_multiplier: 2
+
+# Package-specific overrides
+package_overrides:
+  # Example: Override settings for specific packages
+  "python-requests":
+    endpoints: ["pypi"]
+    options:
+      repository: "testpypi"  # Use test PyPI for this package
+  
+  "cpp-json":
+    endpoints: ["vcpkg"]
+    options:
+      auto_pr: true
+      review_required: false
+
+# Distribution workflow settings
+workflow:
+  # Whether to automatically distribute after binding generation
+  auto_distribute: false
+  
+  # Whether to create distribution reports
+  create_reports: true
+  
+  # Report format (json, yaml, text)
+  report_format: "json"
+  
+  # Whether to notify on distribution success/failure
+  notifications:
+    enabled: false
+    webhook_url: ${DISTRIBUTION_WEBHOOK_URL}
+    slack_channel: ${SLACK_CHANNEL}
+    email: ${DISTRIBUTION_EMAIL} 

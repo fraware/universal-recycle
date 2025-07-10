@@ -1,0 +1,27 @@
+# Python-only template for Universal Recycle
+# This template is ideal for Python projects that need modernization and distribution
+
+repositories:
+  - name: python-requests
+    language: python
+    git: https://github.com/psf/requests.git
+    commit: main
+    adapters: [ruff, mypy]
+    bindings: [grpc]
+    description: "Python HTTP library for humans"
+
+  - name: python-numpy
+    language: python
+    git: https://github.com/numpy/numpy.git
+    commit: main
+    adapters: [ruff, mypy]
+    bindings: [grpc]
+    description: "Fundamental package for array computing in Python"
+
+  - name: python-pandas
+    language: python
+    git: https://github.com/pandas-dev/pandas.git
+    commit: main
+    adapters: [ruff, mypy]
+    bindings: [grpc]
+    description: "Data manipulation and analysis library"

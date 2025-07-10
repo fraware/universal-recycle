@@ -1,0 +1,48 @@
+# Multi-Language Monorepo template for Universal Recycle
+# This template is ideal for complex projects with multiple languages and services
+
+repositories:
+  # Python services
+  - name: python-api
+    language: python
+    git: https://github.com/example/api-service.git
+    commit: main
+    adapters: [ruff, mypy]
+    bindings: [grpc]
+    description: "Python API service"
+
+  # C++ core libraries
+  - name: cpp-core
+    language: cpp
+    git: https://github.com/example/core-lib.git
+    commit: master
+    adapters: [clang-tidy, vcpkg]
+    bindings: [pybind11, grpc]
+    description: "C++ core library"
+
+  # Rust microservices
+  - name: rust-service
+    language: rust
+    git: https://github.com/example/rust-service.git
+    commit: main
+    adapters: [cargo-check, cargo-fmt]
+    bindings: [pyo3, grpc]
+    description: "Rust microservice"
+
+  # Go utilities
+  - name: go-utils
+    language: go
+    git: https://github.com/example/go-utils.git
+    commit: master
+    adapters: [go-fmt, go-vet]
+    bindings: [cgo, grpc]
+    description: "Go utility library"
+
+  # WebAssembly frontend
+  - name: wasm-frontend
+    language: wasm
+    git: https://github.com/example/wasm-frontend.git
+    commit: main
+    adapters: [wasm-pack, wasm-bindgen]
+    bindings: [wasm]
+    description: "WebAssembly frontend"

@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package python_requests;
+
+// Auto-generated gRPC service definition
+service python_requestsService {
+    // Example RPC method
+    rpc GetInfo(GetInfoRequest) returns (GetInfoResponse);
+    
+    // Add more RPC methods based on the actual service
+}
+
+message GetInfoRequest {
+    string query = 1;
+}
+
+message GetInfoResponse {
+    string info = 1;
+    bool success = 2;
+}

@@ -1,0 +1,27 @@
+# Rust/WebAssembly template for Universal Recycle
+# This template is ideal for projects targeting both native and web platforms
+
+repositories:
+  - name: rust-serde
+    language: rust
+    git: https://github.com/serde-rs/serde.git
+    commit: master
+    adapters: [cargo-check, cargo-fmt]
+    bindings: [pyo3, wasm, grpc]
+    description: "Serialization framework for Rust"
+
+  - name: rust-wasm-example
+    language: wasm
+    git: https://github.com/rustwasm/wasm-pack-template.git
+    commit: master
+    adapters: [wasm-pack, wasm-bindgen]
+    bindings: [wasm]
+    description: "WebAssembly example project"
+
+  - name: rust-tokio
+    language: rust
+    git: https://github.com/tokio-rs/tokio.git
+    commit: master
+    adapters: [cargo-check, cargo-fmt]
+    bindings: [pyo3, grpc]
+    description: "Asynchronous runtime for Rust"

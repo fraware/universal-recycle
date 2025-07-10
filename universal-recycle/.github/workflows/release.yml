@@ -1,0 +1,136 @@
+name: Release Universal Recycle
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r recycle/requirements.txt
+          pip install build setuptools wheel
+
+      - name: Build Python package
+        run: |
+          # Create a simple setup.py for the CLI
+          cat > setup.py << 'EOF'
+          from setuptools import setup, find_packages
+
+          setup(
+              name="universal-recycle",
+              version="${GITHUB_REF#refs/tags/}",
+              description="A polyglot, manifest-driven build system for recycling code",
+              author="Universal Recycle Team",
+              packages=find_packages(),
+              install_requires=[
+                  "pyyaml>=6.0",
+              ],
+              entry_points={
+                  'console_scripts': [
+                      'recycle=recycle.cli:main',
+                  ],
+              },
+              python_requires=">=3.9",
+          )
+          EOF
+
+          python -m build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: universal-recycle-${{ matrix.os }}
+          path: dist/
+
+  create-release:
+    needs: release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            universal-recycle-ubuntu-latest/*
+            universal-recycle-windows-latest/*
+            universal-recycle-macos-latest/*
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-pypi:
+    needs: release
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r recycle/requirements.txt
+          pip install build setuptools wheel twine
+
+      - name: Build package
+        run: |
+          # Create setup.py (same as above)
+          cat > setup.py << 'EOF'
+          from setuptools import setup, find_packages
+
+          setup(
+              name="universal-recycle",
+              version="${GITHUB_REF#refs/tags/}",
+              description="A polyglot, manifest-driven build system for recycling code",
+              author="Universal Recycle Team",
+              packages=find_packages(),
+              install_requires=[
+                  "pyyaml>=6.0",
+              ],
+              entry_points={
+                  'console_scripts': [
+                      'recycle=recycle.cli:main',
+                  ],
+              },
+              python_requires=">=3.9",
+          )
+          EOF
+
+          python -m build
+
+      - name: Publish to PyPI
+        run: |
+          twine upload dist/*
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}

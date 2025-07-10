@@ -1,0 +1,9 @@
+name: example-plugin
+version: 0.1.0
+description: Example plugin for Universal Recycle. Demonstrates plugin manifest structure.
+language: any
+author: Universal Recycle Team
+tags:
+  - demo
+  - example
+entrypoint: main.py 

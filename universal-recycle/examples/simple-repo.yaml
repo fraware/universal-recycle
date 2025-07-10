@@ -1,0 +1,20 @@
+# Example repos.yaml for the Universal Recycle project
+# This file demonstrates how to add repositories to the manifest
+
+- name: awesome-fft
+  git: https://github.com/orphan/fftlib.git
+  commit: 0d34be2
+  language: cpp
+  adapters: [clang_tidy, vcpkg_manifest]
+
+- name: python-utils
+  git: https://github.com/example/python-utils.git
+  commit: main
+  language: python
+  adapters: [ruff, mypy, security_scan]
+
+- name: rust-crypto
+  git: https://github.com/example/rust-crypto.git
+  commit: v1.2.3
+  language: rust
+  adapters: [clippy, cargo_audit] 

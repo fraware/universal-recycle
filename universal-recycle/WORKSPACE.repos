@@ -1,0 +1,11 @@
+workspace(name = "recycled_repos")
+
+local_repository(
+    name = "python-requests",
+    path = "C:\Users\mateo\OneDrive\Documents\Documents Matéo\AFTER STANFORD\HC Fellow\upcycle\universal-recycle\repos\python-requests",
+)
+
+local_repository(
+    name = "cpp-json",
+    path = "C:\Users\mateo\OneDrive\Documents\Documents Matéo\AFTER STANFORD\HC Fellow\upcycle\universal-recycle\repos\cpp-json",
+)

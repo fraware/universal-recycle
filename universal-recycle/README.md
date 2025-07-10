@@ -4,6 +4,11 @@
 
 Universal Recycle revolutionizes how you manage multi-language projects by providing a unified, extensible platform for code modernization, cross-language interoperability, and enterprise-grade build automation.
 
+[![PyPI downloads](https://img.shields.io/pypi/dm/universal-recycle)](https://pypi.org/project/universal-recycle/)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)
+
+
 ## Key Features
 
 ### **Multi-Language Support**
@@ -240,9 +245,3 @@ Universal Recycle is licensed under the MIT License. See [LICENSE](LICENSE) for 
 - [GitHub Discussions](https://github.com/your-org/universal-recycle/discussions)
 - [Email Support](mailto:support@universal-recycle.org)
 - [Twitter](https://twitter.com/universalrecycle)
-
-[![GitHub stars](https://img.shields.io/github/stars/your-org/universal-recycle?style=social)](https://github.com/your-org/universal-recycle)
-[![PyPI downloads](https://img.shields.io/pypi/dm/universal-recycle)](https://pypi.org/project/universal-recycle/)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)
-[![Build Status](https://github.com/your-org/universal-recycle/workflows/CI/badge.svg)](https://github.com/your-org/universal-recycle/actions)

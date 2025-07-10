@@ -4,7 +4,7 @@
 
 Universal Recycle revolutionizes how you manage multi-language projects by providing a unified, extensible platform for code modernization, cross-language interoperability, and enterprise-grade build automation.
 
-[![GitHub stars](https://img.shields.io/github/stars/fraware/upcycle?style=social)](https://github.com/fraware/upcycle)
+[![GitHub stars](https://img.shields.io/github/stars/fraware/universal-recycle?style=social)](https://github.com/fraware/universal-recycle)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)
 
@@ -43,8 +43,8 @@ Universal Recycle revolutionizes how you manage multi-language projects by provi
 
 ```bash
 # Clone the repository
-git clone https://github.com/fraware/upcycle.git
-cd upcycle
+git clone https://github.com/fraware/universal-recycle.git
+cd universal-recycle
 
 # Navigate to the Universal Recycle project
 cd universal-recycle
@@ -210,8 +210,8 @@ We welcome contributions! See our [Contributing Guide](universal-recycle/CONTRIB
 
 ```bash
 # Fork and clone
-git clone https://github.com/your-username/upcycle.git
-cd upcycle/universal-recycle
+git clone https://github.com/your-username/universal-recycle.git
+cd universal-recycle/universal-recycle
 
 # Install development dependencies
 pip install -r requirements-dev.txt

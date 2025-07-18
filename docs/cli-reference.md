@@ -621,4 +621,4 @@ python recycle/cli.py sync --help
 python recycle/cli.py --version
 ```
 
-For more information, see the [main documentation](../README.md) or visit our [GitHub repository](https://github.com/your-org/universal-recycle).
+For more information, see the [main documentation](../README.md) or visit our [GitHub repository](https://github.com/fraware/universal-recycle).

@@ -36,7 +36,7 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 choco install universal-recycle
 
 # Or install from source
-git clone https://github.com/your-org/universal-recycle.git
+git clone https://github.com/fraware/universal-recycle.git
 cd universal-recycle
 pip install -r requirements.txt
 ```
@@ -51,7 +51,7 @@ pip install -r requirements.txt
 # Download from https://git-scm.com/download/win
 
 # Clone repository
-git clone https://github.com/your-org/universal-recycle.git
+git clone https://github.com/fraware/universal-recycle.git
 cd universal-recycle
 
 # Install dependencies
@@ -92,7 +92,7 @@ cd vcpkg
 brew install universal-recycle
 
 # Or install from source
-git clone https://github.com/your-org/universal-recycle.git
+git clone https://github.com/fraware/universal-recycle.git
 cd universal-recycle
 pip install -r requirements.txt
 ```
@@ -107,7 +107,7 @@ brew install python@3.11
 brew install git
 
 # Clone repository
-git clone https://github.com/your-org/universal-recycle.git
+git clone https://github.com/fraware/universal-recycle.git
 cd universal-recycle
 
 # Install dependencies
@@ -160,7 +160,7 @@ sudo apt install -y python3 python3-pip git build-essential
 sudo apt install -y python3-venv python3-dev
 
 # Clone repository
-git clone https://github.com/your-org/universal-recycle.git
+git clone https://github.com/fraware/universal-recycle.git
 cd universal-recycle
 
 # Create virtual environment (recommended)
@@ -202,7 +202,7 @@ sudo yum install -y python3-devel
 # Or for Fedora: sudo dnf install -y python3-devel
 
 # Clone repository
-git clone https://github.com/your-org/universal-recycle.git
+git clone https://github.com/fraware/universal-recycle.git
 cd universal-recycle
 
 # Create virtual environment
@@ -233,7 +233,7 @@ docker run -it --rm \
 
 ```bash
 # Clone repository
-git clone https://github.com/your-org/universal-recycle.git
+git clone https://github.com/fraware/universal-recycle.git
 cd universal-recycle
 
 # Build Docker image
@@ -284,7 +284,7 @@ python -c "import universal_recycle; print(universal_recycle.__version__)"
 
 ```bash
 # Clone repository
-git clone https://github.com/your-org/universal-recycle.git
+git clone https://github.com/fraware/universal-recycle.git
 cd universal-recycle
 
 # Install in development mode
@@ -517,7 +517,7 @@ After successful installation:
    See [CLI Reference](cli-reference.md)
 
 4. **Join the Community:**
-   - [GitHub Discussions](https://github.com/your-org/universal-recycle/discussions)
+   - [GitHub Discussions](https://github.com/fraware/universal-recycle/discussions)
    - [Discord Server](https://discord.gg/universal-recycle)
    - [Mailing List](https://groups.google.com/g/universal-recycle)
 

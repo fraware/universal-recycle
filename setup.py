@@ -15,7 +15,7 @@ setup(
     description="A polyglot, manifest-driven build system for recycling and modernizing code",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/your-org/universal-recycle",
+    url="https://github.com/fraware/universal-recycle",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 3 - Alpha",
@@ -42,8 +42,8 @@ setup(
     },
     keywords="build-system, polyglot, code-recycling, bazel, python, cpp",
     project_urls={
-        "Bug Reports": "https://github.com/your-org/universal-recycle/issues",
-        "Source": "https://github.com/your-org/universal-recycle",
-        "Documentation": "https://github.com/your-org/universal-recycle#readme",
+        "Bug Reports": "https://github.com/fraware/universal-recycle/issues",
+        "Source": "https://github.com/fraware/universal-recycle",
+        "Documentation": "https://github.com/fraware/universal-recycle#readme",
     },
 )

@@ -6,7 +6,7 @@ Welcome to Universal Recycle - the polyglot, manifest-driven, hermetic build sys
 
 ```bash
 # Install Universal Recycle
-git clone https://github.com/your-org/universal-recycle.git
+git clone https://github.com/fraware/universal-recycle.git
 cd universal-recycle
 
 # Initialize a new project

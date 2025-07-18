@@ -299,8 +299,8 @@ def validate_distribution_config(config_path: str) -> Tuple[bool, List[str]]:
 
 def validate_all_configs(
     manifest_path: str,
-    cache_config_path: str = None,
-    distribution_config_path: str = None,
+    cache_config_path: Optional[str] = None,
+    distribution_config_path: Optional[str] = None,
 ) -> Tuple[bool, Dict[str, List[str]]]:
     """Validate all configuration files."""
     all_errors = {}
@@ -331,7 +331,7 @@ def validate_all_configs(
 
 def print_validation_errors(errors: Dict[str, List[str]]):
     """Print validation errors in a user-friendly format."""
-    from .colors import print_error, print_warning, print_info
+    from colors import print_error, print_warning, print_info
 
     total_errors = sum(len(error_list) for error_list in errors.values())
 
@@ -401,7 +401,7 @@ def suggest_fixes(errors: Dict[str, List[str]]) -> Dict[str, List[str]]:
 
 def print_suggestions(suggestions: Dict[str, List[str]]):
     """Print suggestions for fixing validation errors."""
-    from .colors import print_info
+    from colors import print_info
 
     if not suggestions:
         return

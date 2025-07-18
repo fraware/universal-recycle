@@ -12,7 +12,7 @@ Get up and running with Universal Recycle in 5 minutes! This tutorial will guide
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/universal-recycle.git
+git clone https://github.com/fraware/universal-recycle.git
 cd universal-recycle
 
 # Install dependencies
@@ -69,13 +69,13 @@ Edit the generated `repos.yaml` file:
 repositories:
   - name: python-core
     language: python
-    git: https://github.com/your-org/python-core
+    git: https://github.com/fraware/python-core
     commit: main
     adapters: [ruff, mypy, security]
 
   - name: cpp-engine
     language: cpp
-    git: https://github.com/your-org/cpp-engine
+    git: https://github.com/fraware/cpp-engine
     commit: v1.0.0
     adapters: [clang-tidy, vcpkg]
 ```
@@ -234,7 +234,7 @@ python recycle/cli.py template --template-command create --template-name web-ser
 
 ```bash
 # Check network connectivity
-git clone https://github.com/your-org/python-core
+git clone https://github.com/fraware/python-core
 
 # Verify repository URLs in repos.yaml
 cat repos.yaml

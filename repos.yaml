@@ -26,8 +26,8 @@ repositories:
     git: https://gitlab.com/libeigen/eigen.git
     commit: 3.4.0
     adapters:
-      - clang_tidy
-      - vcpkg_manifest
+      - clang-tidy
+      - vcpkg
     bindings:
       - pybind11  # Generate Python bindings for linear algebra
       - grpc      # Generate gRPC service for matrix operations
@@ -39,7 +39,6 @@ repositories:
     adapters:
       - ruff
       - mypy
-      - security_scan
     bindings:
       - grpc  # Generate gRPC service for numerical operations
 

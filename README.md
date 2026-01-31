@@ -1,6 +1,6 @@
 # Universal Recycle
 
-**The polyglot, manifest-driven, hermetic build system for recycling and modernizing code across languages.**
+**Polyglot, hermetic build system for recycling and modernizing code across languages.**
 
 Universal Recycle revolutionizes how you manage multi-language projects by providing a unified, extensible platform for code modernization, cross-language interoperability, and enterprise-grade build automation.
 

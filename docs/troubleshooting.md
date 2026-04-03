@@ -2,6 +2,8 @@
 
 Common issues and solutions for Universal Recycle.
 
+If `recycle` is not found, use **`python -m recycle`** with the same arguments, or ensure your environment’s `Scripts` / `bin` directory (where pip installs console scripts) is on `PATH`.
+
 ## Quick Fixes
 
 ### Repository Sync Issues
@@ -19,7 +21,7 @@ PermissionError: [WinError 5] Access is denied: 'path/to/repo/.git/hooks'
 rm -rf repos/problematic-repo
 
 # Re-sync with force flag
-python recycle/cli.py sync --force
+recycle sync --force
 ```
 
 **Problem**: Git clone fails with network errors
@@ -75,7 +77,7 @@ ERROR: [RuffAdapter] Configuration file not found
 echo 'line-length = 88' > pyproject.toml
 
 # Or use default configuration
-python recycle/cli.py adapt --adapter ruff --fix
+recycle adapt --adapter ruff --fix
 ```
 
 ### Build Issues
@@ -98,7 +100,7 @@ ERROR: Target 'cpp-engine' build failed: missing compiler
 cat build_profiles.yaml
 
 # Try different profile
-python recycle/cli.py build --target cpp-engine --profile debug
+recycle build --target cpp-engine --profile debug
 ```
 
 **Problem**: Bazel not found
@@ -116,7 +118,7 @@ WARNING: Bazel not available, falling back to simulation
 # Linux: curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor > bazel.gpg
 
 # Or continue without Bazel
-python recycle/cli.py build --target cpp-engine
+recycle build --target cpp-engine
 ```
 
 ### Cache Issues
@@ -131,10 +133,10 @@ ERROR: Cache backend 'local' failed to initialize
 
 ```bash
 # Clear cache
-python recycle/cli.py cache --cache-command clear
+recycle cache --cache-command clear
 
 # Check cache status
-python recycle/cli.py cache --cache-command status
+recycle cache --cache-command status
 ```
 
 **Problem**: Remote cache connection fails
@@ -169,10 +171,10 @@ FileNotFoundError: repos.yaml not found
 
 ```bash
 # Create default configuration
-python recycle/cli.py init
+recycle init
 
 # Or specify config file
-python recycle/cli.py sync --config my-repos.yaml
+recycle sync --config my-repos.yaml
 ```
 
 **Error**: `Invalid YAML syntax`
@@ -185,7 +187,7 @@ yaml.YAMLError: mapping values are not allowed here
 
 ```bash
 # Validate YAML syntax
-python recycle/cli.py validate
+recycle validate
 
 # Check for common YAML issues:
 # - Proper indentation (use spaces, not tabs)
@@ -277,14 +279,14 @@ export REQUESTS_CA_BUNDLE=/path/to/cert.pem
 
 ```bash
 # Enable verbose output
-python recycle/cli.py sync --verbose
+recycle sync --verbose
 
 # Set log level
-python recycle/cli.py sync --log-level DEBUG
+recycle sync --log-level DEBUG
 
 # Or use environment variable
 export UNIVERSAL_RECYCLE_LOG_LEVEL=DEBUG
-python recycle/cli.py sync
+recycle sync
 ```
 
 ### Check System Information
@@ -306,13 +308,13 @@ pip list | grep universal-recycle
 
 ```bash
 # Validate manifest
-python recycle/cli.py validate --manifest repos.yaml
+recycle validate --manifest repos.yaml
 
 # Validate build profiles
-python recycle/cli.py validate --config build_profiles.yaml
+recycle validate --config build_profiles.yaml
 
 # Strict validation
-python recycle/cli.py validate --strict
+recycle validate --strict
 ```
 
 ## Performance Issues
@@ -326,10 +328,10 @@ python recycle/cli.py validate --strict
 curl -o /dev/null -s -w "%{speed_download}\n" https://github.com
 
 # Use shallow clones
-python recycle/cli.py sync --shallow
+recycle sync --shallow
 
 # Parallel sync
-python recycle/cli.py sync --jobs 8
+recycle sync --jobs 8
 ```
 
 ### Slow Builds
@@ -338,13 +340,13 @@ python recycle/cli.py sync --jobs 8
 
 ```bash
 # Use distributed builds
-python recycle/cli.py build --distributed --jobs 8
+recycle build --distributed --jobs 8
 
 # Enable caching
-python recycle/cli.py cache --cache-command status
+recycle cache --cache-command status
 
 # Use Bazel for faster builds
-python recycle/cli.py build --bazel
+recycle build --bazel
 ```
 
 ### High Memory Usage
@@ -353,11 +355,11 @@ python recycle/cli.py build --bazel
 
 ```bash
 # Reduce parallel jobs
-python recycle/cli.py sync --jobs 2
-python recycle/cli.py adapt --parallel false
+recycle sync --jobs 2
+recycle adapt --parallel false
 
 # Clear cache
-python recycle/cli.py cache --cache-command clear
+recycle cache --cache-command clear
 
 # Monitor memory usage
 # Windows: taskmgr
@@ -419,7 +421,7 @@ pyenv install 3.11.0
 pyenv global 3.11.0
 
 # Or use system Python
-/usr/bin/python3 recycle/cli.py sync
+/usr/bin/python3 -m recycle sync
 ```
 
 **Problem**: Xcode command line tools
@@ -505,7 +507,7 @@ cat repos.yaml
 cat build_profiles.yaml
 
 # Error logs
-python recycle/cli.py sync --verbose --log-level DEBUG 2>&1 | tee error.log
+recycle sync --verbose --log-level DEBUG 2>&1 | tee error.log
 ```
 
 ### Issue Templates
@@ -521,7 +523,7 @@ Brief description of the issue
 
 ## Steps to Reproduce
 
-1. Run `python recycle/cli.py sync`
+1. Run `recycle sync`
 2. See error: `...`
 
 ## Expected Behavior
@@ -582,21 +584,21 @@ Other approaches you've considered
 
 ```bash
 # Weekly maintenance
-python recycle/cli.py cache --cache-command clear
-python recycle/cli.py validate --strict
+recycle cache --cache-command clear
+recycle validate --strict
 
 # Monthly maintenance
-python recycle/cli.py sync --force
-python recycle/cli.py plugin --plugin-command check --plugin-name all
+recycle sync --force
+recycle plugin --plugin-command check --plugin-name all
 ```
 
 ### Monitoring
 
 ```bash
 # Check system health
-python recycle/cli.py cache --cache-command stats
-python recycle/cli.py build --build-command status
+recycle cache --cache-command stats
+recycle build --build-command status
 
 # Monitor performance
-python recycle/cli.py performance --performance-command stats
+recycle performance --performance-command stats
 ```

@@ -6,7 +6,7 @@ This module provides cross-platform color support for rich CLI output.
 
 import os
 import sys
-from typing import Optional
+from typing import Dict, List, Optional
 
 
 class Colors:
@@ -179,13 +179,9 @@ def print_adapter_summary(results: dict):
         total_count = len(repo_results)
 
         if success_count == total_count:
-            print_success(
-                f"{repo_name}: {success_count}/{total_count} adapters succeeded"
-            )
+            print_success(f"{repo_name}: {success_count}/{total_count} adapters succeeded")
         else:
-            print_warning(
-                f"{repo_name}: {success_count}/{total_count} adapters succeeded"
-            )
+            print_warning(f"{repo_name}: {success_count}/{total_count} adapters succeeded")
 
             # Show which adapters failed
             for adapter, success in repo_results.items():
@@ -201,13 +197,9 @@ def print_binding_summary(results: dict):
         total_count = len(repo_results)
 
         if success_count == total_count:
-            print_success(
-                f"{repo_name}: {success_count}/{total_count} generators succeeded"
-            )
+            print_success(f"{repo_name}: {success_count}/{total_count} generators succeeded")
         else:
-            print_warning(
-                f"{repo_name}: {success_count}/{total_count} generators succeeded"
-            )
+            print_warning(f"{repo_name}: {success_count}/{total_count} generators succeeded")
 
             # Show which generators failed
             for generator, success in repo_results.items():
@@ -216,7 +208,7 @@ def print_binding_summary(results: dict):
 
         # Show generated bindings
         if success_count > 0:
-            print_info(f"    Generated bindings available in:")
+            print_info("    Generated bindings available in:")
             # This would be populated based on actual generated files
             print(f"      - {repo_name}/python_bindings/ (pybind11)")
             print(f"      - {repo_name}/grpc/ (gRPC)")
@@ -253,7 +245,9 @@ def print_next_steps(steps: list):
         print(f"  {colorize(f'{i}.', Colors.BRIGHT_BLUE)} {step}")
 
 
-def print_command_help(command: str, description: str, examples: list | None = None):
+def print_command_help(
+    command: str, description: str, examples: Optional[List[str]] = None
+):
     """Print help for a specific command."""
     print_header(f"Command: {command}")
     print(f"  {description}")
@@ -292,7 +286,7 @@ def print_manifest_summary(repos: list):
     print(f"  Total repositories: {len(repos)}")
 
     # Group by language
-    languages = {}
+    languages: Dict[str, List[str]] = {}
     for repo in repos:
         lang = repo["language"]
         if lang not in languages:
@@ -327,9 +321,7 @@ def print_distribution_summary(results: dict):
 
         for package_type, endpoint_results in repo_results.items():
             if isinstance(endpoint_results, dict):
-                success_count = sum(
-                    1 for success in endpoint_results.values() if success
-                )
+                success_count = sum(1 for success in endpoint_results.values() if success)
                 total_count = len(endpoint_results)
 
                 if success_count == total_count:

@@ -6,17 +6,14 @@ generation results using Redis and cloud storage backends.
 """
 
 import os
-import json
 import hashlib
 import pickle
-import time
 import logging
 from pathlib import Path
-from typing import Dict, List, Any, Optional, Union, Tuple
-from dataclasses import dataclass, asdict
+from typing import Dict, List, Any, Optional
+from dataclasses import dataclass
 from datetime import datetime, timedelta
 import tempfile
-import shutil
 
 try:
     import redis
@@ -33,7 +30,7 @@ except ImportError:
     BOTO3_AVAILABLE = False
 
 try:
-    from google.cloud import storage
+    from google.cloud import storage  # noqa: F401
 
     GOOGLE_CLOUD_AVAILABLE = True
 except ImportError:
@@ -77,11 +74,7 @@ class CacheEntry:
             key=data["key"],
             data=data["data"],
             created_at=datetime.fromisoformat(data["created_at"]),
-            expires_at=(
-                datetime.fromisoformat(data["expires_at"])
-                if data["expires_at"]
-                else None
-            ),
+            expires_at=(datetime.fromisoformat(data["expires_at"]) if data["expires_at"] else None),
             size_bytes=data["size_bytes"],
             metadata=data["metadata"],
         )
@@ -271,9 +264,7 @@ class S3CacheBackend(CacheBackend):
 
             # Check if object exists and get metadata
             try:
-                response = self.s3_client.head_object(
-                    Bucket=self.bucket_name, Key=s3_key
-                )
+                response = self.s3_client.head_object(Bucket=self.bucket_name, Key=s3_key)
                 expires_at = response.get("Metadata", {}).get("expires_at")
 
                 if expires_at:
@@ -356,9 +347,7 @@ class S3CacheBackend(CacheBackend):
             objects_to_delete = []
             for page in pages:
                 if "Contents" in page:
-                    objects_to_delete.extend(
-                        [{"Key": obj["Key"]} for obj in page["Contents"]]
-                    )
+                    objects_to_delete.extend([{"Key": obj["Key"]} for obj in page["Contents"]])
 
             if objects_to_delete:
                 self.s3_client.delete_objects(
@@ -665,9 +654,7 @@ def compute_file_hash(file_path: str) -> str:
     return hash_sha256.hexdigest()
 
 
-def cache_directory_contents(
-    cache_manager: CacheManager, directory: str, cache_key: str
-) -> bool:
+def cache_directory_contents(cache_manager: CacheManager, directory: str, cache_key: str) -> bool:
     """Cache the contents of a directory as a tar.gz archive."""
     try:
         import tarfile

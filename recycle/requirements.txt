@@ -1,1 +1,3 @@
-pyyaml>=6.0 
+# Deprecated: install the package instead (declared in pyproject.toml).
+#   pip install -e ".[dev]"
+pyyaml>=6.0

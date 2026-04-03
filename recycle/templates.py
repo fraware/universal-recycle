@@ -5,7 +5,6 @@ This module handles listing and copying predefined templates
 for different project types and configurations.
 """
 
-import os
 import shutil
 import yaml
 from pathlib import Path
@@ -61,7 +60,7 @@ def list_templates() -> List[Dict[str, Any]]:
                         "path": template_path,
                     }
                 )
-        except Exception as e:
+        except Exception:
             # Fallback if template can't be parsed
             templates.append(
                 {
@@ -136,9 +135,7 @@ def print_template_info(template_name: str) -> bool:
                 for repo in lang_repos:
                     adapters = ", ".join(repo.get("adapters", []))
                     bindings = ", ".join(repo.get("bindings", []))
-                    print(
-                        f"    - {repo['name']}: {repo.get('description', 'No description')}"
-                    )
+                    print(f"    - {repo['name']}: {repo.get('description', 'No description')}")
                     print(f"      Adapters: {adapters}")
                     print(f"      Bindings: {bindings}")
 

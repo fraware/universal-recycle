@@ -13,7 +13,7 @@ A clear and concise description of what the bug is.
 Steps to reproduce the behavior:
 
 1. Add repository to `repos.yaml`: `...`
-2. Run command: `python recycle/cli.py sync`
+2. Run command: `recycle sync` (or `python -m recycle sync`)
 3. See error: `...`
 
 **Expected behavior**

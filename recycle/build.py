@@ -9,7 +9,7 @@ import os
 import json
 import time
 import subprocess
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any
 from pathlib import Path
 import logging
 import yaml
@@ -24,9 +24,7 @@ class BuildGraph:
         self.nodes = {}  # target_name -> node_info
         self.edges = []  # list of (from, to) tuples
 
-    def add_target(
-        self, name: str, language: str = "unknown", dependencies: List[str] = None
-    ):
+    def add_target(self, name: str, language: str = "unknown", dependencies: List[str] = None):
         """Add a build target to the graph."""
         self.nodes[name] = {
             "name": name,
@@ -57,9 +55,7 @@ class BuildGraph:
 
         for name, node in self.nodes.items():
             color = colors.get(node["language"], colors["unknown"])
-            lines.append(
-                f'  "{name}" [fillcolor="{color}", label="{name}\\n{node["language"]}"];'
-            )
+            lines.append(f'  "{name}" [fillcolor="{color}", label="{name}\\n{node["language"]}"];')
 
         # Add edges
         for from_node, to_node in self.edges:
@@ -158,7 +154,7 @@ class BuildHooks:
         # Make executable on Unix systems
         try:
             os.chmod(hook_file, 0o755)
-        except:
+        except OSError:
             pass  # Windows doesn't have chmod
 
     def run_hooks(self, hook_type: str, context: Dict[str, Any] = None) -> bool:

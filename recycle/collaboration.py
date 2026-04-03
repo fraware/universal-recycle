@@ -5,14 +5,11 @@ This module provides team management, permissions, shared workspaces,
 and collaboration tools for enterprise use cases.
 """
 
-import os
-import json
 import yaml
-import hashlib
-from typing import Dict, List, Any, Optional, Set
+from typing import Dict, List, Any
 from pathlib import Path
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -77,9 +74,7 @@ class TeamManager:
             "last_active": users[username]["last_active"],
         }
 
-    def create_shared_workspace(
-        self, workspace_name: str, owner: str, members: List[str]
-    ) -> bool:
+    def create_shared_workspace(self, workspace_name: str, owner: str, members: List[str]) -> bool:
         """Create a shared workspace for team collaboration."""
         workspaces = self._load_workspaces()
 
@@ -189,9 +184,7 @@ class CICDIntegration:
         self.pipelines_file = self.config_dir / "pipelines.yaml"
         self.webhooks_file = self.config_dir / "webhooks.yaml"
 
-    def create_pipeline(
-        self, name: str, triggers: List[str], steps: List[Dict[str, Any]]
-    ) -> bool:
+    def create_pipeline(self, name: str, triggers: List[str], steps: List[Dict[str, Any]]) -> bool:
         """Create a CI/CD pipeline."""
         pipelines = self._load_pipelines()
 
@@ -262,9 +255,7 @@ class CICDIntegration:
         logger.info(f"Added webhook {name}")
         return True
 
-    def _execute_step(
-        self, step: Dict[str, Any], context: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def _execute_step(self, step: Dict[str, Any], context: Dict[str, Any]) -> Dict[str, Any]:
         """Execute a single pipeline step."""
         step_type = step.get("type", "unknown")
 
@@ -281,9 +272,7 @@ class CICDIntegration:
                 "error": f"Unknown step type: {step_type}",
             }
 
-    def _execute_build_step(
-        self, step: Dict[str, Any], context: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def _execute_build_step(self, step: Dict[str, Any], context: Dict[str, Any]) -> Dict[str, Any]:
         """Execute a build step."""
         return {
             "step": step.get("name", "build"),
@@ -292,9 +281,7 @@ class CICDIntegration:
             "duration": "00:01:15",
         }
 
-    def _execute_test_step(
-        self, step: Dict[str, Any], context: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def _execute_test_step(self, step: Dict[str, Any], context: Dict[str, Any]) -> Dict[str, Any]:
         """Execute a test step."""
         return {
             "step": step.get("name", "test"),
@@ -303,9 +290,7 @@ class CICDIntegration:
             "duration": "00:00:45",
         }
 
-    def _execute_deploy_step(
-        self, step: Dict[str, Any], context: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def _execute_deploy_step(self, step: Dict[str, Any], context: Dict[str, Any]) -> Dict[str, Any]:
         """Execute a deploy step."""
         return {
             "step": step.get("name", "deploy"),

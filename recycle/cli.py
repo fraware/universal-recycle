@@ -2,36 +2,13 @@ import yaml
 import os
 import sys
 import argparse
-from pathlib import Path
 import subprocess
 import shutil
 import logging
-from plugin import (
-    run_adapters,
-    list_plugins,
-    PluginManifest,
-    check_plugin_health,
-    install_plugin,
-    remove_plugin,
-    search_plugins,
-)
-from bindings import generate_bindings
-from cache import CacheManager, generate_build_cache_key, generate_binding_cache_key
-from distribution import (
-    DistributionManager,
-    load_distribution_config,
-    distribute_packages,
-)
-from typing import Dict, Any
-from wizard import run_wizard
-from templates import list_templates, copy_template, print_template_info
-from validation import (
-    validate_all_configs,
-    print_validation_errors,
-    suggest_fixes,
-    print_suggestions,
-)
-from colors import (
+
+from .bindings import generate_bindings
+from .cache import CacheManager
+from .colors import (
     print_progress,
     print_sync_summary,
     print_adapter_summary,
@@ -50,9 +27,28 @@ from colors import (
     print_warning,
     print_info,
 )
+from .distribution import (
+    DistributionManager,
+    distribute_packages,
+)
+from .plugin import (
+    check_plugin_health,
+    install_plugin,
+    list_plugins,
+    remove_plugin,
+    run_adapters,
+    search_plugins,
+)
+from .templates import copy_template, list_templates, print_template_info
+from .validation import (
+    print_suggestions,
+    suggest_fixes,
+    validate_all_configs,
+)
+from .wizard import run_wizard
 
 try:
-    from build import (
+    from .build import (
         generate_build_graph_from_repos,
         get_build_status,
         get_build_logs,
@@ -78,7 +74,7 @@ except ImportError:
     simulate_build_targets_with_profile = None
 
 try:
-    from bazel import (
+    from .bazel import (
         check_bazel_available,
         get_bazel_version,
         build_target_with_bazel,
@@ -93,8 +89,8 @@ except ImportError:
     generate_bazel_workspace_with_profiles = None
 
 try:
-    from collaboration import TeamManager, CICDIntegration
-    from performance import (
+    from .collaboration import CICDIntegration, TeamManager
+    from .performance import (
         DistributedBuildManager,
         EnhancedCacheManager,
         PerformanceMonitor,
@@ -134,12 +130,8 @@ def load_manifest(manifest_path):
 def load_cache_config(config_path):
     """Load cache configuration."""
     if not os.path.exists(config_path):
-        print(
-            f"Cache config not found at {config_path}, using defaults", file=sys.stderr
-        )
-        return {
-            "backends": [{"type": "local", "cache_dir": ".cache/universal_recycle"}]
-        }
+        print(f"Cache config not found at {config_path}, using defaults", file=sys.stderr)
+        return {"backends": [{"type": "local", "cache_dir": ".cache/universal_recycle"}]}
 
     with open(config_path, "r") as f:
         return yaml.safe_load(f)
@@ -162,9 +154,7 @@ def print_manifest(repos):
     """Print the loaded manifest in a readable format."""
     print("Loaded manifest:")
     for repo in repos:
-        print(
-            f"- {repo['name']} ({repo['language']}): {repo['git']} @ {repo['commit']}"
-        )
+        print(f"- {repo['name']} ({repo['language']}): {repo['git']} @ {repo['commit']}")
         if "adapters" in repo:
             print(f"  Adapters: {', '.join(repo['adapters'])}")
 
@@ -243,10 +233,10 @@ def generate_bazel_workspace(repos, repos_dir, output_path):
         repo_path = os.path.join(repos_dir, repo_name)
 
         if os.path.exists(repo_path):
-            workspace_content.append(f"local_repository(")
+            workspace_content.append("local_repository(")
             workspace_content.append(f'    name = "{repo_name}",')
             workspace_content.append(f'    path = "{repo_path}",')
-            workspace_content.append(f")\n")
+            workspace_content.append(")\n")
 
     with open(output_path, "w") as f:
         f.write("\n".join(workspace_content))
@@ -292,16 +282,12 @@ def run_adapters_on_repos(repos, repos_dir, adapter_names=None):
     return total_results
 
 
-def generate_bindings_for_repos(
-    repos, repos_dir, generator_names=None, target_repo=None
-):
+def generate_bindings_for_repos(repos, repos_dir, generator_names=None, target_repo=None):
     """Generate bindings for repositories."""
     print("Generating bindings for repositories...")
 
     total_results = {}
-    filtered_repos = [
-        repo for repo in repos if not target_repo or repo["name"] == target_repo
-    ]
+    filtered_repos = [repo for repo in repos if not target_repo or repo["name"] == target_repo]
     total = len(filtered_repos)
     for idx, repo in enumerate(filtered_repos, 1):
         repo_name = repo["name"]
@@ -408,12 +394,8 @@ def main():
         ],
         help="Command to execute",
     )
-    parser.add_argument(
-        "--manifest", default="repos.yaml", help="Path to repos.yaml manifest"
-    )
-    parser.add_argument(
-        "--repos-dir", default="repos", help="Directory to clone repositories into"
-    )
+    parser.add_argument("--manifest", default="repos.yaml", help="Path to repos.yaml manifest")
+    parser.add_argument("--repos-dir", default="repos", help="Directory to clone repositories into")
     parser.add_argument(
         "--workspace",
         default="WORKSPACE.repos",
@@ -427,9 +409,7 @@ def main():
         nargs="+",
         help="Specific generators to run (default: pybind11, grpc)",
     )
-    parser.add_argument(
-        "--repo", help="Target specific repository for binding generation"
-    )
+    parser.add_argument("--repo", help="Target specific repository for binding generation")
 
     # Cache-specific arguments
     parser.add_argument(
@@ -538,9 +518,7 @@ def main():
         help="Performance subcommand",
     )
     parser.add_argument("--node-id", help="Build node ID for distributed operations")
-    parser.add_argument(
-        "--distributed", action="store_true", help="Use distributed builds"
-    )
+    parser.add_argument("--distributed", action="store_true", help="Use distributed builds")
 
     args = parser.parse_args()
 
@@ -604,9 +582,7 @@ def main():
         repos_dir = os.path.join(base_dir, args.repos_dir)
 
         if not os.path.exists(repos_dir):
-            print_error(
-                f"Repositories directory {repos_dir} not found. Run 'sync' first."
-            )
+            print_error(f"Repositories directory {repos_dir} not found. Run 'sync' first.")
             sys.exit(1)
 
         print_header("Running Adapters")
@@ -620,15 +596,11 @@ def main():
         repos_dir = os.path.join(base_dir, args.repos_dir)
 
         if not os.path.exists(repos_dir):
-            print_error(
-                f"Repositories directory {repos_dir} not found. Run 'sync' first."
-            )
+            print_error(f"Repositories directory {repos_dir} not found. Run 'sync' first.")
             sys.exit(1)
 
         print_header("Generating Bindings")
-        results = generate_bindings_for_repos(
-            repos, repos_dir, args.generators, args.repo
-        )
+        results = generate_bindings_for_repos(repos, repos_dir, args.generators, args.repo)
 
         # Use the enhanced summary function
         print_binding_summary(results)
@@ -658,9 +630,7 @@ def main():
             repos_dir = os.path.join(base_dir, args.repos_dir)
 
             if not os.path.exists(repos_dir):
-                print(
-                    f"Repositories directory {repos_dir} not found. Run 'sync' first."
-                )
+                print(f"Repositories directory {repos_dir} not found. Run 'sync' first.")
                 sys.exit(1)
 
             # Set dry run mode if requested
@@ -675,9 +645,7 @@ def main():
                         endpoint.config.options["dry_run"] = True
 
             print_header("Distributing Packages")
-            results = distribute_packages(
-                repos, repos_dir, distribution_config, args.repo
-            )
+            results = distribute_packages(repos, repos_dir, distribution_config, args.repo)
 
             # Use the enhanced summary function
             print_distribution_summary(results)
@@ -732,9 +700,7 @@ def main():
             if not plugins:
                 print_warning("No plugins found in the local plugins directory.")
             for plugin in plugins:
-                print(
-                    f"- {plugin['name']} ({plugin['version']}) [{plugin['language']}]"
-                )
+                print(f"- {plugin['name']} ({plugin['version']}) [{plugin['language']}]")
                 print(f"  {plugin['description']}")
                 if plugin["tags"]:
                     print(f"  Tags: {', '.join(plugin['tags'])}")
@@ -762,9 +728,7 @@ def main():
                 sys.exit(1)
             plugin_path = os.path.join(plugins_dir, args.plugin_name)
             if not os.path.exists(plugin_path):
-                print_error(
-                    f"Plugin '{args.plugin_name}' not found in plugins directory."
-                )
+                print_error(f"Plugin '{args.plugin_name}' not found in plugins directory.")
                 sys.exit(1)
             print_header(f"Checking Plugin: {args.plugin_name}")
             status = check_plugin_health(plugin_path)
@@ -808,9 +772,7 @@ def main():
             if not results:
                 print_warning("No matching plugins found.")
             for plugin in results:
-                print(
-                    f"- {plugin['name']} ({plugin['version']}) [{plugin['language']}]"
-                )
+                print(f"- {plugin['name']} ({plugin['version']}) [{plugin['language']}]")
                 print(f"  {plugin['description']}")
                 if plugin["tags"]:
                     print(f"  Tags: {', '.join(plugin['tags'])}")
@@ -886,7 +848,7 @@ def main():
                 print(f"\nUser: {permissions['username']}")
                 print(f"Role: {permissions['role']}")
                 print(f"Last Active: {permissions['last_active']}")
-                print(f"\nPermissions:")
+                print("\nPermissions:")
                 for perm, value in permissions["permissions"].items():
                     status = "✓" if value else "✗"
                     print(f"  {status} {perm}")
@@ -945,9 +907,7 @@ def main():
                 {"name": "deploy", "type": "deploy", "targets": ["production"]},
             ]
 
-            success = cicd.create_pipeline(
-                args.pipeline_name, ["push", "pull_request"], steps
-            )
+            success = cicd.create_pipeline(args.pipeline_name, ["push", "pull_request"], steps)
             if success:
                 print_success(f"Created pipeline {args.pipeline_name}")
             else:
@@ -990,11 +950,7 @@ def main():
     elif args.command == "performance":
         print_header("Universal Recycle Performance Management")
 
-        if (
-            not DistributedBuildManager
-            or not EnhancedCacheManager
-            or not PerformanceMonitor
-        ):
+        if not DistributedBuildManager or not EnhancedCacheManager or not PerformanceMonitor:
             print_error(
                 "Performance features not available. Please ensure performance.py is properly installed."
             )
@@ -1015,21 +971,15 @@ def main():
             dist_manager = DistributedBuildManager(config)
 
             # Add build nodes
-            dist_manager.add_build_node(
-                "node1", "build1.example.com", 8080, ["cpp", "python"]
-            )
-            dist_manager.add_build_node(
-                "node2", "build2.example.com", 8080, ["rust", "go"]
-            )
+            dist_manager.add_build_node("node1", "build1.example.com", 8080, ["cpp", "python"])
+            dist_manager.add_build_node("node2", "build2.example.com", 8080, ["rust", "go"])
 
             # Show node status
             nodes = dist_manager.get_node_status()
             print(f"\nBuild Nodes ({len(nodes)}):")
             for node in nodes:
                 status_icon = "🟢" if node["status"] == "available" else "🔴"
-                print(
-                    f"  {status_icon} {node['id']} ({node['host']}) - {node['status']}"
-                )
+                print(f"  {status_icon} {node['id']} ({node['host']}) - {node['status']}")
 
         elif args.performance_command == "cache-stats":
             print_info("Enhanced Cache Statistics")
@@ -1046,7 +996,7 @@ def main():
             cache_manager = EnhancedCacheManager(cache_config)
             stats = cache_manager.get_cache_stats()
 
-            print(f"\nCache Statistics:")
+            print("\nCache Statistics:")
             print(f"  Hit Rate: {stats['hit_rate']:.2%}")
             print(f"  Local Cache Size: {stats['local_cache_size']} bytes")
             print(f"  Remote Backends: {stats['remote_backends']}")
@@ -1068,7 +1018,7 @@ def main():
 
             report = monitor.get_performance_report()
 
-            print(f"\nPerformance Report:")
+            print("\nPerformance Report:")
             print(f"  Uptime: {report['uptime']:.1f} seconds")
             print(f"  Total Builds: {report['total_builds']}")
             print(f"  Average Build Time: {report['average_build_time']:.2f} seconds")
@@ -1086,9 +1036,7 @@ def main():
         print_header("Universal Recycle Build System")
 
         if not generate_build_graph_from_repos:
-            print_error(
-                "Build module not available. Please ensure build.py is properly installed."
-            )
+            print_error("Build module not available. Please ensure build.py is properly installed.")
             return
 
         # Check Bazel availability if requested
@@ -1101,9 +1049,7 @@ def main():
 
             bazel_available = check_bazel_available()
             if not bazel_available:
-                print_warning(
-                    "Bazel not found in PATH. Falling back to simulation mode."
-                )
+                print_warning("Bazel not found in PATH. Falling back to simulation mode.")
                 args.bazel = False
             else:
                 bazel_version = get_bazel_version()
@@ -1131,14 +1077,10 @@ def main():
                 dist_manager = DistributedBuildManager(config)
 
                 # Add some sample nodes
-                dist_manager.add_build_node(
-                    "local", "localhost", 8080, ["cpp", "python"]
-                )
+                dist_manager.add_build_node("local", "localhost", 8080, ["cpp", "python"])
 
                 if args.target:
-                    result = dist_manager.distribute_build(
-                        [args.target], profile_settings
-                    )
+                    result = dist_manager.distribute_build([args.target], profile_settings)
                     print_success(f"Distributed build completed for {args.target}")
                     print(f"Nodes used: {result['nodes_used']}")
                     return
@@ -1155,9 +1097,7 @@ def main():
                     if result["output"]:
                         print(f"Output: {result['output'][:200]}...")
                 else:
-                    print_error(
-                        f"Bazel build failed: {result.get('error', result['stderr'])}"
-                    )
+                    print_error(f"Bazel build failed: {result.get('error', result['stderr'])}")
             else:
                 # Use simulation
                 subgraph = get_subgraph_for_target(graph, args.target)
@@ -1167,7 +1107,7 @@ def main():
                 build_status = simulate_build_targets_with_profile(
                     subgraph, list(subgraph.nodes.keys()), profile_settings
                 )
-                print_success(f"Built targets:")
+                print_success("Built targets:")
                 for target, result in build_status.items():
                     print(
                         f"  {target}: {result['result']} (flags: {result['cflags']}, env: {result['env']})"
@@ -1188,12 +1128,10 @@ def main():
                 )
 
                 # Print graph summary
-                print(f"\nGraph Summary:")
+                print("\nGraph Summary:")
                 print(f"  Nodes: {len(graph.nodes)}")
                 print(f"  Edges: {len(graph.edges)}")
-                print(
-                    f"  Languages: {set(node['language'] for node in graph.nodes.values())}"
-                )
+                print(f"  Languages: {set(node['language'] for node in graph.nodes.values())}")
             except Exception as e:
                 print_error(f"Failed to generate build graph: {e}")
 
@@ -1202,22 +1140,22 @@ def main():
             try:
                 status = get_build_status()
 
-                print(f"\nBuild Status:")
+                print("\nBuild Status:")
                 print(f"  Last Build: {status.get('last_build', 'Never')}")
                 print(f"  Status: {status.get('status', 'Unknown')}")
 
                 if status.get("targets"):
-                    print(f"\nTargets:")
+                    print("\nTargets:")
                     for target, target_status in status["targets"].items():
                         print(f"  {target}: {target_status}")
 
                 if status.get("errors"):
-                    print(f"\nErrors:")
+                    print("\nErrors:")
                     for error in status["errors"]:
                         print_error(f"  {error}")
 
                 if status.get("warnings"):
-                    print(f"\nWarnings:")
+                    print("\nWarnings:")
                     for warning in status["warnings"]:
                         print_warning(f"  {warning}")
             except Exception as e:
@@ -1229,7 +1167,7 @@ def main():
                 logs = get_build_logs()
 
                 if logs:
-                    print(f"\nRecent Build Logs:")
+                    print("\nRecent Build Logs:")
                     for log_entry in logs[-20:]:  # Show last 20 entries
                         print(f"  {log_entry.rstrip()}")
                 else:
@@ -1242,7 +1180,7 @@ def main():
             try:
                 hooks = list_build_hooks()
 
-                print(f"\nAvailable Hooks:")
+                print("\nAvailable Hooks:")
                 for hook_type, hook_files in hooks.items():
                     if hook_files:
                         print(f"  {hook_type.upper()} hooks:")

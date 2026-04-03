@@ -7,10 +7,7 @@ and gRPC service definitions for cross-language communication.
 
 import os
 import re
-import json
-import subprocess
-from pathlib import Path
-from typing import Dict, List, Any, Optional, Set
+from typing import Dict, List, Any, Optional
 import logging
 
 logger = logging.getLogger(__name__)
@@ -52,8 +49,7 @@ class Pybind11Generator(BindingGenerator):
             dirs[:] = [
                 d
                 for d in dirs
-                if d
-                not in [".git", "build", "cmake-build", "test", "tests", "examples"]
+                if d not in [".git", "build", "cmake-build", "test", "tests", "examples"]
             ]
 
             for file in files:
@@ -193,9 +189,7 @@ class PyO3Generator(BindingGenerator):
         rust_files = []
         for root, dirs, files in os.walk(self.repo_path):
             # Skip common directories
-            dirs[:] = [
-                d for d in dirs if d not in [".git", "target", "tests", "examples"]
-            ]
+            dirs[:] = [d for d in dirs if d not in [".git", "target", "tests", "examples"]]
 
             for file in files:
                 if file.endswith(".rs"):
@@ -316,11 +310,11 @@ pyo3 = {{ version = "0.19", features = ["extension-module"] }}
 
     def _generate_build_rs(self, module_name: str) -> str:
         """Generate build.rs for PyO3."""
-        return f"""use pyo3_build_config;
+        return """use pyo3_build_config;
 
-fn main() {{
+fn main() {
     pyo3_build_config::add_extension_module_link_args();
-}}
+}
 """
 
 
@@ -645,9 +639,7 @@ class GrpcGenerator(BindingGenerator):
                             content = f.read()
 
                         # Look for service-like patterns
-                        if "class" in content and (
-                            "Service" in content or "API" in content
-                        ):
+                        if "class" in content and ("Service" in content or "API" in content):
                             service_candidates.append(file_path)
                     except Exception:
                         continue
@@ -715,9 +707,7 @@ class {service_name}Client:
         grpc_dir = os.path.join(self.repo_path, "grpc")
         os.makedirs(grpc_dir, exist_ok=True)
 
-        service_name = (
-            os.path.basename(self.repo_path).replace("-", "_").replace(" ", "_")
-        )
+        service_name = os.path.basename(self.repo_path).replace("-", "_").replace(" ", "_")
 
         # Generate .proto file
         proto_content = self._generate_proto_file(service_name)

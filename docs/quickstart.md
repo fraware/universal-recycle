@@ -4,7 +4,7 @@ Get up and running with Universal Recycle in 5 minutes! This tutorial will guide
 
 ## Prerequisites
 
-- Python 3.8 or higher
+- Python 3.9 or higher
 - Git
 - Basic familiarity with command line tools
 
@@ -15,16 +15,19 @@ Get up and running with Universal Recycle in 5 minutes! This tutorial will guide
 git clone https://github.com/fraware/universal-recycle.git
 cd universal-recycle
 
-# Install dependencies
-pip install -r requirements.txt
+# Install the package (editable install with dev extras for contributors)
+pip install -e ".[dev]"
 ```
+
+Dependencies are declared in `pyproject.toml`. Optional feature groups include `grpc`, `bindings`, `cache-redis`, `cache-s3`, `cache-gcs`, `rust`, and `all`.
 
 ## Step 2: Initialize Your Project
 
 Universal Recycle provides an interactive wizard to set up your project:
 
 ```bash
-python recycle/cli.py init
+recycle init
+# or: python -m recycle init
 ```
 
 The wizard will ask you several questions:
@@ -82,10 +85,10 @@ repositories:
 
 ## Step 4: Sync Repositories
 
-Download and sync your repositories:
+Download and sync your repositories. By default clones are written to **`repos/`** in your project root (that directory is gitignored in the upstream repository so only your machine keeps the checkouts).
 
 ```bash
-python recycle/cli.py sync
+recycle sync
 ```
 
 Output:
@@ -110,7 +113,7 @@ Sync Summary: 2/2 repositories synced successfully
 Modernize and improve your code with adapters:
 
 ```bash
-python recycle/cli.py adapt
+recycle adapt
 ```
 
 Output:
@@ -138,7 +141,7 @@ Adapter Summary: 5/5 adapters succeeded
 Create cross-language interoperability:
 
 ```bash
-python recycle/cli.py bind --generators pybind11 grpc
+recycle bind --generators pybind11 grpc
 ```
 
 Output:
@@ -162,13 +165,13 @@ Build with advanced features:
 
 ```bash
 # Build with debug profile
-python recycle/cli.py build --target cpp-engine --profile debug
+recycle build --target cpp-engine --profile debug
 
 # Build with Bazel integration
-python recycle/cli.py build --target cpp-engine --profile release --bazel
+recycle build --target cpp-engine --profile release --bazel
 
 # Build with distributed system
-python recycle/cli.py build --target cpp-engine --distributed
+recycle build --target cpp-engine --distributed
 ```
 
 ## Step 8: Distribute Packages
@@ -176,7 +179,7 @@ python recycle/cli.py build --target cpp-engine --distributed
 Publish your packages to registries:
 
 ```bash
-python recycle/cli.py distribute --target python-core
+recycle distribute --target python-core
 ```
 
 ## What You've Accomplished
@@ -196,20 +199,20 @@ In just a few minutes, you've:
 
 ```bash
 # Team collaboration
-python recycle/cli.py team --team-command add-user --username alice --role member
+recycle team --team-command add-user --username alice --role member
 
 # CI/CD integration
-python recycle/cli.py cicd --cicd-command create-pipeline --pipeline-name production
+recycle cicd --cicd-command create-pipeline --pipeline-name production
 
 # Performance monitoring
-python recycle/cli.py performance --performance-command monitor
+recycle performance --performance-command monitor
 ```
 
 ### Create Custom Plugins
 
 ```bash
 # List available plugins
-python recycle/cli.py plugin --plugin-command list
+recycle plugin --plugin-command list
 
 # Create your own plugin
 mkdir -p plugins/my-custom-adapter
@@ -220,10 +223,10 @@ mkdir -p plugins/my-custom-adapter
 
 ```bash
 # List available templates
-python recycle/cli.py template --template-command list
+recycle template --template-command list
 
 # Create project from template
-python recycle/cli.py template --template-command create --template-name web-service
+recycle template --template-command create --template-name web-service
 ```
 
 ## Troubleshooting
@@ -255,7 +258,7 @@ pip install ruff mypy bandit
 cat build_profiles.yaml
 
 # Try different profile
-python recycle/cli.py build --target cpp-engine --profile debug
+recycle build --target cpp-engine --profile debug
 ```
 
 ## Congratulations!

@@ -7,6 +7,15 @@ with remote caching and pluggable adapters for linting, modernization,
 security scanning, and binding generation.
 """
 
-__version__ = "0.1.0"
+try:
+    from importlib.metadata import PackageNotFoundError, version
+
+    try:
+        __version__ = version("universal-recycle")
+    except PackageNotFoundError:
+        __version__ = "0.1.0"
+except ImportError:
+    __version__ = "0.1.0"
+
 __author__ = "Universal Recycle Team"
 __description__ = "A polyglot, manifest-driven, hermetic build system"

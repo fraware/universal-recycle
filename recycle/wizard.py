@@ -5,12 +5,8 @@ This module provides an interactive CLI wizard to help new users
 set up their Universal Recycle project with minimal friction.
 """
 
-import os
 import yaml
-import sys
-from pathlib import Path
 from typing import Dict, List, Any, Optional
-import re
 
 
 class Colors:
@@ -323,9 +319,7 @@ def run_wizard() -> bool:
     )
 
     # Get project name
-    project_name = get_user_input(
-        "What would you like to call your project?", "my-recycle-project"
-    )
+    project_name = get_user_input("What would you like to call your project?", "my-recycle-project")
 
     # Collect repositories
     repos = []
@@ -338,16 +332,12 @@ def run_wizard() -> bool:
             break
 
         repo_name = get_user_input("Repository name (e.g., my-cool-lib)")
-        repo_url = get_user_input(
-            "Repository URL (e.g., https://github.com/example/cool-lib.git)"
-        )
+        repo_url = get_user_input("Repository URL (e.g., https://github.com/example/cool-lib.git)")
 
         # Try to detect language
         detected_lang = detect_language_from_url(repo_url)
         if detected_lang:
-            use_detected = get_yes_no(
-                f"Detected language: {detected_lang}. Use this?", "Y"
-            )
+            use_detected = get_yes_no(f"Detected language: {detected_lang}. Use this?", "Y")
             if use_detected:
                 language = detected_lang
             else:
@@ -359,9 +349,7 @@ def run_wizard() -> bool:
 
         # Get adapters
         suggested_adapters = get_adapters_for_language(language)
-        print_info(
-            f"Suggested adapters for {language}: {', '.join(suggested_adapters)}"
-        )
+        print_info(f"Suggested adapters for {language}: {', '.join(suggested_adapters)}")
         use_suggested = get_yes_no("Use suggested adapters?", "Y")
 
         if use_suggested:
@@ -391,18 +379,14 @@ def run_wizard() -> bool:
             else:
                 try:
                     indices = [int(x.strip()) - 1 for x in adapter_choice.split(",")]
-                    adapters = [
-                        all_adapters[i] for i in indices if 0 <= i < len(all_adapters)
-                    ]
+                    adapters = [all_adapters[i] for i in indices if 0 <= i < len(all_adapters)]
                 except (ValueError, IndexError):
                     print_warning("Invalid choice, using suggested adapters")
                     adapters = suggested_adapters
 
         # Get bindings
         suggested_bindings = get_bindings_for_language(language)
-        print_info(
-            f"Suggested bindings for {language}: {', '.join(suggested_bindings)}"
-        )
+        print_info(f"Suggested bindings for {language}: {', '.join(suggested_bindings)}")
         use_suggested_bindings = get_yes_no("Use suggested bindings?", "Y")
 
         if use_suggested_bindings:
@@ -421,9 +405,7 @@ def run_wizard() -> bool:
             else:
                 try:
                     indices = [int(x.strip()) - 1 for x in binding_choice.split(",")]
-                    bindings = [
-                        all_bindings[i] for i in indices if 0 <= i < len(all_bindings)
-                    ]
+                    bindings = [all_bindings[i] for i in indices if 0 <= i < len(all_bindings)]
                 except (ValueError, IndexError):
                     print_warning("Invalid choice, using suggested bindings")
                     bindings = suggested_bindings
@@ -456,9 +438,7 @@ def run_wizard() -> bool:
 
     # Distribution configuration
     print_header("Distribution Configuration")
-    print_info(
-        "Universal Recycle can publish generated packages to various registries."
-    )
+    print_info("Universal Recycle can publish generated packages to various registries.")
 
     use_pypi = get_yes_no("Publish Python packages to PyPI?", "N")
     use_npm = get_yes_no("Publish WebAssembly packages to npm?", "N")
@@ -508,9 +488,7 @@ def run_wizard() -> bool:
 
     if any([use_pypi, use_npm, use_vcpkg, use_crates, use_go_modules]):
         print("  5. Configure your distribution credentials")
-        print(
-            "  6. Run: python recycle/cli.py distribute --distribution-command distribute"
-        )
+        print("  6. Run: python recycle/cli.py distribute --distribution-command distribute")
 
     print_info("For help, run: python recycle/cli.py --help")
 

@@ -7,9 +7,7 @@ including BUILD file generation, command invocation, and result parsing.
 
 import os
 import subprocess
-import json
 from typing import Dict, List, Any, Optional, Tuple
-from pathlib import Path
 import logging
 
 logger = logging.getLogger(__name__)
@@ -18,9 +16,7 @@ logger = logging.getLogger(__name__)
 def check_bazel_available() -> bool:
     """Check if Bazel is available in the system PATH."""
     try:
-        result = subprocess.run(
-            ["bazel", "--version"], capture_output=True, text=True, timeout=10
-        )
+        result = subprocess.run(["bazel", "--version"], capture_output=True, text=True, timeout=10)
         return result.returncode == 0
     except (subprocess.TimeoutExpired, FileNotFoundError):
         return False
@@ -29,9 +25,7 @@ def check_bazel_available() -> bool:
 def get_bazel_version() -> Optional[str]:
     """Get the Bazel version if available."""
     try:
-        result = subprocess.run(
-            ["bazel", "--version"], capture_output=True, text=True, timeout=10
-        )
+        result = subprocess.run(["bazel", "--version"], capture_output=True, text=True, timeout=10)
         if result.returncode == 0:
             return result.stdout.strip()
     except (subprocess.TimeoutExpired, FileNotFoundError):
@@ -52,23 +46,15 @@ def generate_bazel_build_file(
     build_content.append("")
 
     if language == "python":
-        build_content.extend(
-            _generate_python_build(repo_name, repo_path, profile_settings)
-        )
+        build_content.extend(_generate_python_build(repo_name, repo_path, profile_settings))
     elif language == "cpp":
-        build_content.extend(
-            _generate_cpp_build(repo_name, repo_path, profile_settings)
-        )
+        build_content.extend(_generate_cpp_build(repo_name, repo_path, profile_settings))
     elif language == "rust":
-        build_content.extend(
-            _generate_rust_build(repo_name, repo_path, profile_settings)
-        )
+        build_content.extend(_generate_rust_build(repo_name, repo_path, profile_settings))
     elif language == "go":
         build_content.extend(_generate_go_build(repo_name, repo_path, profile_settings))
     else:
-        build_content.extend(
-            _generate_generic_build(repo_name, repo_path, profile_settings)
-        )
+        build_content.extend(_generate_generic_build(repo_name, repo_path, profile_settings))
 
     return "\n".join(build_content)
 
@@ -80,17 +66,17 @@ def _generate_python_build(
     lines = []
     lines.append('load("@rules_python//python:defs.bzl", "py_library", "py_binary")')
     lines.append("")
-    lines.append(f"py_library(")
+    lines.append("py_library(")
     lines.append(f'    name = "{repo_name}",')
-    lines.append(f'    srcs = glob(["**/*.py"]),')
-    lines.append(f'    visibility = ["//visibility:public"],')
-    lines.append(f")")
+    lines.append('    srcs = glob(["**/*.py"]),')
+    lines.append('    visibility = ["//visibility:public"],')
+    lines.append(")")
     lines.append("")
-    lines.append(f"py_binary(")
+    lines.append("py_binary(")
     lines.append(f'    name = "{repo_name}_bin",')
-    lines.append(f'    srcs = ["__main__.py"],')
+    lines.append('    srcs = ["__main__.py"],')
     lines.append(f'    deps = [":{repo_name}"],')
-    lines.append(f")")
+    lines.append(")")
     return lines
 
 
@@ -105,20 +91,20 @@ def _generate_cpp_build(
     # Apply profile settings
     cflags = profile_settings.get("cflags", "")
     if cflags:
-        lines.append(f"cc_library(")
+        lines.append("cc_library(")
         lines.append(f'    name = "{repo_name}",')
-        lines.append(f'    srcs = glob(["**/*.cpp", "**/*.cc"]),')
-        lines.append(f'    hdrs = glob(["**/*.h", "**/*.hpp"]),')
+        lines.append('    srcs = glob(["**/*.cpp", "**/*.cc"]),')
+        lines.append('    hdrs = glob(["**/*.h", "**/*.hpp"]),')
         lines.append(f'    copts = ["{cflags}"],')
-        lines.append(f'    visibility = ["//visibility:public"],')
-        lines.append(f")")
+        lines.append('    visibility = ["//visibility:public"],')
+        lines.append(")")
     else:
-        lines.append(f"cc_library(")
+        lines.append("cc_library(")
         lines.append(f'    name = "{repo_name}",')
-        lines.append(f'    srcs = glob(["**/*.cpp", "**/*.cc"]),')
-        lines.append(f'    hdrs = glob(["**/*.h", "**/*.hpp"]),')
-        lines.append(f'    visibility = ["//visibility:public"],')
-        lines.append(f")")
+        lines.append('    srcs = glob(["**/*.cpp", "**/*.cc"]),')
+        lines.append('    hdrs = glob(["**/*.h", "**/*.hpp"]),')
+        lines.append('    visibility = ["//visibility:public"],')
+        lines.append(")")
 
     return lines
 
@@ -130,11 +116,11 @@ def _generate_rust_build(
     lines = []
     lines.append('load("@rules_rust//rust:defs.bzl", "rust_library", "rust_binary")')
     lines.append("")
-    lines.append(f"rust_library(")
+    lines.append("rust_library(")
     lines.append(f'    name = "{repo_name}",')
-    lines.append(f'    srcs = glob(["src/**/*.rs"]),')
-    lines.append(f'    visibility = ["//visibility:public"],')
-    lines.append(f")")
+    lines.append('    srcs = glob(["src/**/*.rs"]),')
+    lines.append('    visibility = ["//visibility:public"],')
+    lines.append(")")
     return lines
 
 
@@ -145,12 +131,12 @@ def _generate_go_build(
     lines = []
     lines.append('load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_binary")')
     lines.append("")
-    lines.append(f"go_library(")
+    lines.append("go_library(")
     lines.append(f'    name = "{repo_name}",')
-    lines.append(f'    srcs = glob(["**/*.go"]),')
+    lines.append('    srcs = glob(["**/*.go"]),')
     lines.append(f'    importpath = "github.com/example/{repo_name}",')
-    lines.append(f'    visibility = ["//visibility:public"],')
-    lines.append(f")")
+    lines.append('    visibility = ["//visibility:public"],')
+    lines.append(")")
     return lines
 
 
@@ -160,13 +146,13 @@ def _generate_generic_build(
     """Generate generic BUILD rules for unknown languages."""
     lines = []
     lines.append(f"# Generic BUILD file for {repo_name}")
-    lines.append(f"# Language not recognized, using basic filegroup")
+    lines.append("# Language not recognized, using basic filegroup")
     lines.append("")
-    lines.append(f"filegroup(")
+    lines.append("filegroup(")
     lines.append(f'    name = "{repo_name}",')
-    lines.append(f'    srcs = glob(["**/*"]),')
-    lines.append(f'    visibility = ["//visibility:public"],')
-    lines.append(f")")
+    lines.append('    srcs = glob(["**/*"]),')
+    lines.append('    visibility = ["//visibility:public"],')
+    lines.append(")")
     return lines
 
 
@@ -216,9 +202,7 @@ def build_target_with_bazel(
         }
 
     command = ["bazel", "build", f"//{target}"]
-    success, stdout, stderr = invoke_bazel_command(
-        command, workspace_path, profile_settings
-    )
+    success, stdout, stderr = invoke_bazel_command(command, workspace_path, profile_settings)
 
     return {
         "success": success,
@@ -272,10 +256,10 @@ def generate_bazel_workspace_with_profiles(
         repo_path = os.path.join(repos_dir, repo_name)
 
         if os.path.exists(repo_path):
-            workspace_content.append(f"local_repository(")
+            workspace_content.append("local_repository(")
             workspace_content.append(f'    name = "{repo_name}",')
             workspace_content.append(f'    path = "{repo_path}",')
-            workspace_content.append(f")")
+            workspace_content.append(")")
             workspace_content.append("")
 
     return "\n".join(workspace_content)

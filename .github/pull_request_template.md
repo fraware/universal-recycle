@@ -14,7 +14,8 @@ Brief description of the changes made in this PR.
 
 - [ ] I have tested this change locally
 - [ ] I have added tests that prove my fix is effective or that my feature works
-- [ ] All existing tests pass
+- [ ] All existing tests pass (`pytest` from the repo root after `pip install -e ".[dev]"`)
+- [ ] Lint passes (`ruff check recycle tests`, `ruff format --check recycle tests`) and `mypy recycle/` per project config
 
 ## Checklist
 

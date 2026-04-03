@@ -1,0 +1,128 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "universal-recycle"
+version = "0.1.0"
+description = "A polyglot, manifest-driven build system for recycling and modernizing code"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.9"
+authors = [{ name = "Universal Recycle Team" }]
+keywords = ["build-system", "polyglot", "bazel", "python", "cpp"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Build Tools",
+]
+dependencies = [
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+grpc = [
+    "grpcio>=1.59.0",
+    "grpcio-tools>=1.59.0",
+]
+bindings = [
+    "pybind11>=2.11.0",
+    "cffi>=1.15.0",
+]
+cache-redis = ["redis>=4.5.0"]
+cache-s3 = ["boto3>=1.28.0"]
+cache-gcs = ["google-cloud-storage>=2.10.0"]
+rust = ["maturin>=1.4.0"]
+all = [
+    "grpcio>=1.59.0",
+    "grpcio-tools>=1.59.0",
+    "pybind11>=2.11.0",
+    "cffi>=1.15.0",
+    "redis>=4.5.0",
+    "boto3>=1.28.0",
+    "google-cloud-storage>=2.10.0",
+    "maturin>=1.4.0",
+]
+dev = [
+    "grpcio>=1.59.0",
+    "grpcio-tools>=1.59.0",
+    "pybind11>=2.11.0",
+    "cffi>=1.15.0",
+    "redis>=4.5.0",
+    "boto3>=1.28.0",
+    "google-cloud-storage>=2.10.0",
+    "maturin>=1.4.0",
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "ruff>=0.1.0",
+    "mypy>=1.5.0",
+    "pip-audit>=2.6.0",
+    "build>=1.0.0",
+    "twine>=4.0.0",
+    "pre-commit>=3.5.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/fraware/universal-recycle"
+Documentation = "https://github.com/fraware/universal-recycle#readme"
+Repository = "https://github.com/fraware/universal-recycle"
+Issues = "https://github.com/fraware/universal-recycle/issues"
+
+[project.scripts]
+recycle = "recycle.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["recycle*", "templates*"]
+
+[tool.setuptools.package-data]
+templates = ["*.yaml", "*.yml"]
+recycle = ["*.yaml", "*.yml"]
+
+[tool.ruff]
+target-version = "py39"
+line-length = 100
+src = ["recycle", "tests"]
+
+[tool.mypy]
+python_version = "3.9"
+warn_unused_configs = true
+ignore_missing_imports = true
+packages = ["recycle"]
+
+# Incremental typing: strict checking will expand module-by-module over time.
+[[tool.mypy.overrides]]
+module = [
+    "recycle.bazel",
+    "recycle.bindings",
+    "recycle.build",
+    "recycle.cache",
+    "recycle.cli",
+    "recycle.collaboration",
+    "recycle.colors",
+    "recycle.distribution",
+    "recycle.performance",
+    "recycle.plugin",
+    "recycle.templates",
+    "recycle.wizard",
+]
+ignore_errors = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --cov=recycle --cov-report=term-missing --cov-fail-under=14"
+asyncio_default_fixture_loop_scope = "function"
+
+[tool.coverage.run]
+branch = true
+source = ["recycle"]
+omit = ["*/tests/*"]
+
+[tool.coverage.report]
+exclude_lines = ["pragma: no cover", "if TYPE_CHECKING:"]

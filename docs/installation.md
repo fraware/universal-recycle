@@ -2,11 +2,13 @@
 
 Complete installation guide for Universal Recycle across all platforms.
 
+Dependencies and extras are declared in the repository [`pyproject.toml`](../pyproject.toml). After installation, the CLI is available as **`recycle`** (or **`python -m recycle`** with the same arguments). Cloned repositories from `sync` live under **`repos/`** locally (gitignored by default; see the main [README](../README.md)).
+
 ## System Requirements
 
 ### Minimum Requirements
 
-- **Python**: 3.8 or higher
+- **Python**: 3.9 or higher
 - **Git**: 2.20 or higher
 - **Memory**: 4GB RAM (8GB recommended)
 - **Disk Space**: 2GB free space
@@ -38,7 +40,7 @@ choco install universal-recycle
 # Or install from source
 git clone https://github.com/fraware/universal-recycle.git
 cd universal-recycle
-pip install -r requirements.txt
+pip install -e ".[dev]"
 ```
 
 #### Option 2: Manual Installation
@@ -55,10 +57,9 @@ git clone https://github.com/fraware/universal-recycle.git
 cd universal-recycle
 
 # Install dependencies
-pip install -r requirements.txt
+pip install -e ".[dev]"
 
-# Add to PATH (optional)
-# Add C:\path\to\universal-recycle to your PATH environment variable
+# The `recycle` command is installed into Python's Scripts directory; ensure that folder is on PATH.
 ```
 
 #### Windows-Specific Dependencies
@@ -94,7 +95,7 @@ brew install universal-recycle
 # Or install from source
 git clone https://github.com/fraware/universal-recycle.git
 cd universal-recycle
-pip install -r requirements.txt
+pip install -e ".[dev]"
 ```
 
 #### Option 2: Manual Installation
@@ -111,7 +112,7 @@ git clone https://github.com/fraware/universal-recycle.git
 cd universal-recycle
 
 # Install dependencies
-pip install -r requirements.txt
+pip install -e ".[dev]"
 ```
 
 #### macOS-Specific Dependencies
@@ -168,7 +169,7 @@ python3 -m venv venv
 source venv/bin/activate
 
 # Install dependencies
-pip install -r requirements.txt
+pip install -e ".[dev]"
 ```
 
 #### Linux-Specific Dependencies
@@ -210,7 +211,7 @@ python3 -m venv venv
 source venv/bin/activate
 
 # Install dependencies
-pip install -r requirements.txt
+pip install -e ".[dev]"
 ```
 
 ## Docker Installation
@@ -226,7 +227,7 @@ docker run -it --rm \
   -v $(pwd):/workspace \
   -v ~/.gitconfig:/root/.gitconfig \
   universalrecycle/universal-recycle:latest \
-  python recycle/cli.py init
+  python -m recycle init
 ```
 
 ### Building from Source
@@ -239,17 +240,17 @@ cd universal-recycle
 # Build Docker image
 docker build -t universal-recycle .
 
-# Run Universal Recycle
+# Run Universal Recycle (expects the image to install the `recycle` package)
 docker run -it --rm \
   -v $(pwd):/workspace \
   universal-recycle \
-  python recycle/cli.py init
+  python -m recycle init
 ```
 
 ### Docker Compose
 
 ```yaml
-# docker-compose.yml
+# docker-compose.yml (Compose file format version; not Python)
 version: "3.8"
 services:
   universal-recycle:
@@ -260,7 +261,7 @@ services:
     working_dir: /workspace
     environment:
       - UNIVERSAL_RECYCLE_CACHE_DIR=/workspace/.cache
-    command: python recycle/cli.py sync
+    command: python -m recycle sync
 ```
 
 ```bash
@@ -276,8 +277,8 @@ docker-compose up
 # Install Universal Recycle
 pip install universal-recycle
 
-# Verify installation
-python -c "import universal_recycle; print(universal_recycle.__version__)"
+# Verify installation (PyPI distribution name: universal-recycle)
+python -c "from importlib.metadata import version; print(version('universal-recycle'))"
 ```
 
 ### From Source
@@ -287,10 +288,13 @@ python -c "import universal_recycle; print(universal_recycle.__version__)"
 git clone https://github.com/fraware/universal-recycle.git
 cd universal-recycle
 
-# Install in development mode
+# Editable install with dev/test/lint tools (recommended for contributors)
+pip install -e ".[dev]"
+
+# Minimal editable install (runtime dependencies only)
 pip install -e .
 
-# Or install in production mode
+# Non-editable install from the repo root
 pip install .
 ```
 
@@ -301,11 +305,11 @@ pip install .
 python -m pip install --user pipx
 python -m pipx ensurepath
 
-# Install Universal Recycle
+# Install Universal Recycle (console script: recycle)
 pipx install universal-recycle
 
 # Verify installation
-universal-recycle --version
+recycle --version
 ```
 
 ## Configuration
@@ -346,27 +350,27 @@ EOF
 ### Test Installation
 
 ```bash
-# Check Python version
+# Check Python version (3.9+ required)
 python --version
 
 # Check Git version
 git --version
 
-# Test Universal Recycle
-python recycle/cli.py --version
+# Test Universal Recycle (after pip install / pip install -e .)
+recycle --version
 
 # Test basic functionality
-python recycle/cli.py init --non-interactive
-python recycle/cli.py validate
+recycle init --non-interactive
+recycle validate
 ```
 
 ### Test Dependencies
 
 ```bash
-# Test Python adapters
+# Optional tooling (install with pip install -e ".[dev]" from a clone)
 python -c "import ruff; print('Ruff OK')"
 python -c "import mypy; print('MyPy OK')"
-python -c "import bandit; print('Bandit OK')"
+python -c "import bandit; print('Bandit OK')"  # only if you installed bandit separately
 
 # Test C++ tools (if installed)
 clang-tidy --version
@@ -477,7 +481,7 @@ pip install --upgrade universal-recycle
 # Update from source
 cd universal-recycle
 git pull origin main
-pip install -r requirements.txt
+pip install -e ".[dev]"
 
 # Update Docker image
 docker pull universalrecycle/universal-recycle:latest
@@ -486,8 +490,8 @@ docker pull universalrecycle/universal-recycle:latest
 ### Update Dependencies
 
 ```bash
-# Update Python dependencies
-pip install --upgrade -r requirements.txt
+# Update an editable install from a clone (pull first, then:)
+pip install -U -e ".[dev]"
 
 # Update system packages
 # Ubuntu/Debian
@@ -507,7 +511,7 @@ After successful installation:
 1. **Initialize your first project:**
 
    ```bash
-   python recycle/cli.py init
+   recycle init
    ```
 
 2. **Read the Quick Start Guide:**

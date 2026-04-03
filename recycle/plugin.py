@@ -55,7 +55,7 @@ class PythonAdapter(AdapterPlugin):
     def _run_command(self, cmd: List[str], cwd: Optional[str] = None) -> bool:
         """Run a command and return success status."""
         try:
-            result = subprocess.run(
+            subprocess.run(
                 cmd,
                 cwd=cwd or self.repo_path,
                 capture_output=True,
@@ -78,7 +78,7 @@ class CppAdapter(AdapterPlugin):
     def _run_command(self, cmd: List[str], cwd: Optional[str] = None) -> bool:
         """Run a command and return success status."""
         try:
-            result = subprocess.run(
+            subprocess.run(
                 cmd,
                 cwd=cwd or self.repo_path,
                 capture_output=True,
@@ -201,9 +201,7 @@ PLUGIN_REGISTRY = {
 }
 
 
-def get_plugin(
-    plugin_name: str, repo_path: str, config: Dict[str, Any]
-) -> Optional[AdapterPlugin]:
+def get_plugin(plugin_name: str, repo_path: str, config: Dict[str, Any]) -> Optional[AdapterPlugin]:
     """Get a plugin instance by name."""
     if plugin_name not in PLUGIN_REGISTRY:
         logger.warning(f"Plugin '{plugin_name}' not found in registry")
@@ -213,9 +211,7 @@ def get_plugin(
     return plugin_class(repo_path, config)
 
 
-def run_adapters(
-    repo: Dict[str, Any], repo_path: str, adapters: List[str]
-) -> Dict[str, bool]:
+def run_adapters(repo: Dict[str, Any], repo_path: str, adapters: List[str]) -> Dict[str, bool]:
     """Run specified adapters on a repository."""
     results = {}
 
@@ -285,9 +281,7 @@ def discover_local_plugins(plugins_dir: str) -> List[PluginManifest]:
                 try:
                     manifests.append(PluginManifest(manifest_path))
                 except Exception as e:
-                    logger.warning(
-                        f"Failed to load plugin manifest: {manifest_path}: {e}"
-                    )
+                    logger.warning(f"Failed to load plugin manifest: {manifest_path}: {e}")
     return manifests
 
 
@@ -362,9 +356,7 @@ def install_plugin(source_path: str, plugins_dir: str) -> dict:
         # Validate after copy
         health = check_plugin_health(dest_path)
         if not (
-            health["manifest_found"]
-            and health["manifest_valid"]
-            and health["entrypoint_found"]
+            health["manifest_found"] and health["manifest_valid"] and health["entrypoint_found"]
         ):
             status["errors"].extend(health["errors"])
             shutil.rmtree(dest_path)

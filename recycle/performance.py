@@ -5,16 +5,13 @@ This module provides remote caching, distributed builds, parallelization,
 and performance monitoring for enterprise-scale deployments.
 """
 
-import os
 import json
 import time
 import hashlib
-import threading
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Dict, List, Any, Optional
 from pathlib import Path
 import logging
 from concurrent.futures import ThreadPoolExecutor, as_completed
-import subprocess
 
 logger = logging.getLogger(__name__)
 
@@ -29,9 +26,7 @@ class DistributedBuildManager:
         self.build_queue = []
         self.active_builds = {}
 
-    def add_build_node(
-        self, node_id: str, host: str, port: int, capabilities: List[str]
-    ) -> bool:
+    def add_build_node(self, node_id: str, host: str, port: int, capabilities: List[str]) -> bool:
         """Add a build node to the distributed system."""
         node = {
             "id": node_id,
@@ -153,9 +148,7 @@ class EnhancedCacheManager:
 
     def __init__(self, config: Dict[str, Any]):
         self.config = config
-        self.local_cache_dir = Path(
-            config.get("local_cache_dir", ".cache/universal_recycle")
-        )
+        self.local_cache_dir = Path(config.get("local_cache_dir", ".cache/universal_recycle"))
         self.local_cache_dir.mkdir(parents=True, exist_ok=True)
         self.remote_backends = config.get("remote_backends", [])
         self.cache_stats = {"hits": 0, "misses": 0, "uploads": 0, "downloads": 0}
@@ -189,14 +182,10 @@ class EnhancedCacheManager:
                     self._store_in_local_cache(cache_key, result)
                     self.cache_stats["hits"] += 1
                     self.cache_stats["downloads"] += 1
-                    logger.info(
-                        f"Remote cache hit for key {cache_key} from {backend['type']}"
-                    )
+                    logger.info(f"Remote cache hit for key {cache_key} from {backend['type']}")
                     return result
             except Exception as e:
-                logger.warning(
-                    f"Failed to get from remote cache {backend['type']}: {e}"
-                )
+                logger.warning(f"Failed to get from remote cache {backend['type']}: {e}")
 
         self.cache_stats["misses"] += 1
         logger.info(f"Cache miss for key {cache_key}")
@@ -214,15 +203,11 @@ class EnhancedCacheManager:
                 self.cache_stats["uploads"] += 1
                 logger.info(f"Stored in remote cache {backend['type']}")
             except Exception as e:
-                logger.warning(
-                    f"Failed to store in remote cache {backend['type']}: {e}"
-                )
+                logger.warning(f"Failed to store in remote cache {backend['type']}: {e}")
 
         return success
 
-    def _store_in_local_cache(
-        self, cache_key: str, build_result: Dict[str, Any]
-    ) -> bool:
+    def _store_in_local_cache(self, cache_key: str, build_result: Dict[str, Any]) -> bool:
         """Store build result in local cache."""
         try:
             cache_file = self.local_cache_dir / f"{cache_key}.json"
@@ -346,9 +331,7 @@ class PerformanceMonitor:
             {"duration": duration, "profile": profile, "timestamp": time.time()}
         )
 
-    def record_cache_performance(
-        self, cache_type: str, operation: str, duration: float
-    ):
+    def record_cache_performance(self, cache_type: str, operation: str, duration: float):
         """Record cache performance metrics."""
         if cache_type not in self.metrics["cache_performance"]:
             self.metrics["cache_performance"][cache_type] = {}
@@ -360,9 +343,7 @@ class PerformanceMonitor:
             {"duration": duration, "timestamp": time.time()}
         )
 
-    def record_error(
-        self, error_type: str, message: str, context: Dict[str, Any] = None
-    ):
+    def record_error(self, error_type: str, message: str, context: Dict[str, Any] = None):
         """Record an error for monitoring."""
         self.metrics["errors"].append(
             {
@@ -377,9 +358,7 @@ class PerformanceMonitor:
         """Generate a performance report."""
         report = {
             "uptime": time.time() - self.start_time,
-            "total_builds": sum(
-                len(times) for times in self.metrics["build_times"].values()
-            ),
+            "total_builds": sum(len(times) for times in self.metrics["build_times"].values()),
             "average_build_time": self._calculate_average_build_time(),
             "cache_hit_rate": self._calculate_cache_hit_rate(),
             "error_count": len(self.metrics["errors"]),

@@ -4,9 +4,14 @@ Complete reference for the Universal Recycle command-line interface.
 
 ## Overview
 
+After installing the package (`pip install -e .` or from PyPI):
+
 ```bash
-python recycle/cli.py [COMMAND] [OPTIONS]
+recycle [COMMAND] [OPTIONS]
+# or: python -m recycle [COMMAND] [OPTIONS]
 ```
+
+Every command shown as `recycle …` can also be run as `python -m recycle …` (same arguments). From a checkout without installing, use `python -m recycle.cli …`.
 
 ## Global Options
 
@@ -24,7 +29,7 @@ python recycle/cli.py [COMMAND] [OPTIONS]
 Interactive wizard to set up a new Universal Recycle project.
 
 ```bash
-python recycle/cli.py init [OPTIONS]
+recycle init [OPTIONS]
 ```
 
 **Options:**
@@ -37,13 +42,13 @@ python recycle/cli.py init [OPTIONS]
 
 ```bash
 # Interactive initialization
-python recycle/cli.py init
+recycle init
 
 # Use specific template
-python recycle/cli.py init --template web-service
+recycle init --template web-service
 
 # Non-interactive with defaults
-python recycle/cli.py init --non-interactive --output-dir my-project
+recycle init --non-interactive --output-dir my-project
 ```
 
 ### `sync` - Repository Synchronization
@@ -51,7 +56,7 @@ python recycle/cli.py init --non-interactive --output-dir my-project
 Sync repositories defined in the manifest.
 
 ```bash
-python recycle/cli.py sync [OPTIONS]
+recycle sync [OPTIONS]
 ```
 
 **Options:**
@@ -65,16 +70,16 @@ python recycle/cli.py sync [OPTIONS]
 
 ```bash
 # Sync all repositories
-python recycle/cli.py sync
+recycle sync
 
 # Sync specific repository
-python recycle/cli.py sync --repo python-core
+recycle sync --repo python-core
 
 # Force re-clone
-python recycle/cli.py sync --force
+recycle sync --force
 
 # Parallel sync
-python recycle/cli.py sync --jobs 4
+recycle sync --jobs 4
 ```
 
 ### `adapt` - Adapter System
@@ -82,7 +87,7 @@ python recycle/cli.py sync --jobs 4
 Run adapters for linting, modernization, and security scanning.
 
 ```bash
-python recycle/cli.py adapt [OPTIONS]
+recycle adapt [OPTIONS]
 ```
 
 **Options:**
@@ -96,16 +101,16 @@ python recycle/cli.py adapt [OPTIONS]
 
 ```bash
 # Run all adapters
-python recycle/cli.py adapt
+recycle adapt
 
 # Run specific adapter
-python recycle/cli.py adapt --adapter ruff
+recycle adapt --adapter ruff
 
 # Run on specific repo with fixes
-python recycle/cli.py adapt --repo python-core --fix
+recycle adapt --repo python-core --fix
 
 # Parallel execution
-python recycle/cli.py adapt --parallel
+recycle adapt --parallel
 ```
 
 ### `bind` - Binding Generation
@@ -113,7 +118,7 @@ python recycle/cli.py adapt --parallel
 Generate cross-language bindings and interfaces.
 
 ```bash
-python recycle/cli.py bind [OPTIONS]
+recycle bind [OPTIONS]
 ```
 
 **Options:**
@@ -127,16 +132,16 @@ python recycle/cli.py bind [OPTIONS]
 
 ```bash
 # Generate all bindings
-python recycle/cli.py bind
+recycle bind
 
 # Generate specific bindings
-python recycle/cli.py bind --generators pybind11 grpc
+recycle bind --generators pybind11 grpc
 
 # Generate for specific repo
-python recycle/cli.py bind --repo cpp-engine --generators pybind11
+recycle bind --repo cpp-engine --generators pybind11
 
 # Force regeneration
-python recycle/cli.py bind --force
+recycle bind --force
 ```
 
 ### `build` - Build System
@@ -144,7 +149,7 @@ python recycle/cli.py bind --force
 Advanced build system with profiles and Bazel integration.
 
 ```bash
-python recycle/cli.py build [OPTIONS]
+recycle build [OPTIONS]
 ```
 
 **Options:**
@@ -159,16 +164,16 @@ python recycle/cli.py build [OPTIONS]
 
 ```bash
 # Build all targets
-python recycle/cli.py build
+recycle build
 
 # Build with profile
-python recycle/cli.py build --target cpp-engine --profile release
+recycle build --target cpp-engine --profile release
 
 # Use Bazel
-python recycle/cli.py build --target cpp-engine --bazel
+recycle build --target cpp-engine --bazel
 
 # Distributed build
-python recycle/cli.py build --distributed --jobs 8
+recycle build --distributed --jobs 8
 ```
 
 #### Build Subcommands
@@ -176,7 +181,7 @@ python recycle/cli.py build --distributed --jobs 8
 ##### `build graph` - Build Dependency Graph
 
 ```bash
-python recycle/cli.py build --build-command graph [OPTIONS]
+recycle build --build-command graph [OPTIONS]
 ```
 
 **Options:**
@@ -188,29 +193,29 @@ python recycle/cli.py build --build-command graph [OPTIONS]
 
 ```bash
 # Show build graph
-python recycle/cli.py build --build-command graph
+recycle build --build-command graph
 
 # Export as DOT format
-python recycle/cli.py build --build-command graph --output dot
+recycle build --build-command graph --output dot
 ```
 
 ##### `build status` - Build Status
 
 ```bash
-python recycle/cli.py build --build-command status [OPTIONS]
+recycle build --build-command status [OPTIONS]
 ```
 
 **Examples:**
 
 ```bash
 # Show build status
-python recycle/cli.py build --build-command status
+recycle build --build-command status
 ```
 
 ##### `build logs` - Build Logs
 
 ```bash
-python recycle/cli.py build --build-command logs [OPTIONS]
+recycle build --build-command logs [OPTIONS]
 ```
 
 **Options:**
@@ -222,10 +227,10 @@ python recycle/cli.py build --build-command logs [OPTIONS]
 
 ```bash
 # Show recent logs
-python recycle/cli.py build --build-command logs
+recycle build --build-command logs
 
 # Show logs for target
-python recycle/cli.py build --build-command logs --target cpp-engine
+recycle build --build-command logs --target cpp-engine
 ```
 
 ### `distribute` - Package Distribution
@@ -233,7 +238,7 @@ python recycle/cli.py build --build-command logs --target cpp-engine
 Distribute packages to various registries.
 
 ```bash
-python recycle/cli.py distribute [OPTIONS]
+recycle distribute [OPTIONS]
 ```
 
 **Options:**
@@ -247,13 +252,13 @@ python recycle/cli.py distribute [OPTIONS]
 
 ```bash
 # Distribute all packages
-python recycle/cli.py distribute
+recycle distribute
 
 # Distribute to specific registry
-python recycle/cli.py distribute --target python-core --registry pypi
+recycle distribute --target python-core --registry pypi
 
 # Dry run
-python recycle/cli.py distribute --dry-run
+recycle distribute --dry-run
 ```
 
 #### Distribution Subcommands
@@ -261,14 +266,14 @@ python recycle/cli.py distribute --dry-run
 ##### `distribute status` - Distribution Status
 
 ```bash
-python recycle/cli.py distribute --distribution-command status [OPTIONS]
+recycle distribute --distribution-command status [OPTIONS]
 ```
 
 **Examples:**
 
 ```bash
 # Show distribution status
-python recycle/cli.py distribute --distribution-command status
+recycle distribute --distribution-command status
 ```
 
 ### `cache` - Cache Management
@@ -276,7 +281,7 @@ python recycle/cli.py distribute --distribution-command status
 Manage local and remote caching.
 
 ```bash
-python recycle/cli.py cache --cache-command COMMAND [OPTIONS]
+recycle cache --cache-command COMMAND [OPTIONS]
 ```
 
 **Commands:**
@@ -294,13 +299,13 @@ python recycle/cli.py cache --cache-command COMMAND [OPTIONS]
 
 ```bash
 # Show cache status
-python recycle/cli.py cache --cache-command status
+recycle cache --cache-command status
 
 # Clear cache
-python recycle/cli.py cache --cache-command clear
+recycle cache --cache-command clear
 
 # Show statistics
-python recycle/cli.py cache --cache-command stats
+recycle cache --cache-command stats
 ```
 
 ### `plugin` - Plugin Management
@@ -308,7 +313,7 @@ python recycle/cli.py cache --cache-command stats
 Manage Universal Recycle plugins.
 
 ```bash
-python recycle/cli.py plugin --plugin-command COMMAND [OPTIONS]
+recycle plugin --plugin-command COMMAND [OPTIONS]
 ```
 
 **Commands:**
@@ -329,19 +334,19 @@ python recycle/cli.py plugin --plugin-command COMMAND [OPTIONS]
 
 ```bash
 # List plugins
-python recycle/cli.py plugin --plugin-command list
+recycle plugin --plugin-command list
 
 # Show plugin info
-python recycle/cli.py plugin --plugin-command info --plugin-name example-plugin
+recycle plugin --plugin-command info --plugin-name example-plugin
 
 # Check plugin health
-python recycle/cli.py plugin --plugin-command check --plugin-name example-plugin
+recycle plugin --plugin-command check --plugin-name example-plugin
 
 # Install plugin
-python recycle/cli.py plugin --plugin-command install --plugin-path ./my-plugin
+recycle plugin --plugin-command install --plugin-path ./my-plugin
 
 # Search plugins
-python recycle/cli.py plugin --plugin-command search --query "python"
+recycle plugin --plugin-command search --query "python"
 ```
 
 ## `template` - Template Management
@@ -349,7 +354,7 @@ python recycle/cli.py plugin --plugin-command search --query "python"
 Manage project templates.
 
 ```bash
-python recycle/cli.py template --template-command COMMAND [OPTIONS]
+recycle template --template-command COMMAND [OPTIONS]
 ```
 
 **Commands:**
@@ -368,13 +373,13 @@ python recycle/cli.py template --template-command COMMAND [OPTIONS]
 
 ```bash
 # List templates
-python recycle/cli.py template --template-command list
+recycle template --template-command list
 
 # Create from template
-python recycle/cli.py template --template-command create --template-name web-service
+recycle template --template-command create --template-name web-service
 
 # Add custom template
-python recycle/cli.py template --template-command add --template-name my-template
+recycle template --template-command add --template-name my-template
 ```
 
 ### `validate` - Validation
@@ -382,7 +387,7 @@ python recycle/cli.py template --template-command add --template-name my-templat
 Validate manifests and configurations.
 
 ```bash
-python recycle/cli.py validate [OPTIONS]
+recycle validate [OPTIONS]
 ```
 
 **Options:**
@@ -395,13 +400,13 @@ python recycle/cli.py validate [OPTIONS]
 
 ```bash
 # Validate current manifest
-python recycle/cli.py validate
+recycle validate
 
 # Validate specific files
-python recycle/cli.py validate --manifest custom-repos.yaml --config build-config.yaml
+recycle validate --manifest custom-repos.yaml --config build-config.yaml
 
 # Strict validation
-python recycle/cli.py validate --strict
+recycle validate --strict
 ```
 
 ### `team` - Team Collaboration
@@ -409,7 +414,7 @@ python recycle/cli.py validate --strict
 Manage team collaboration features.
 
 ```bash
-python recycle/cli.py team --team-command COMMAND [OPTIONS]
+recycle team --team-command COMMAND [OPTIONS]
 ```
 
 **Commands:**
@@ -431,13 +436,13 @@ python recycle/cli.py team --team-command COMMAND [OPTIONS]
 
 ```bash
 # Add team member
-python recycle/cli.py team --team-command add-user --username alice --role member
+recycle team --team-command add-user --username alice --role member
 
 # List users
-python recycle/cli.py team --team-command list-users
+recycle team --team-command list-users
 
 # Create workspace
-python recycle/cli.py team --team-command create-workspace --workspace-name production
+recycle team --team-command create-workspace --workspace-name production
 ```
 
 ### `cicd` - CI/CD Integration
@@ -445,7 +450,7 @@ python recycle/cli.py team --team-command create-workspace --workspace-name prod
 Manage CI/CD pipelines and automation.
 
 ```bash
-python recycle/cli.py cicd --cicd-command COMMAND [OPTIONS]
+recycle cicd --cicd-command COMMAND [OPTIONS]
 ```
 
 **Commands:**
@@ -466,13 +471,13 @@ python recycle/cli.py cicd --cicd-command COMMAND [OPTIONS]
 
 ```bash
 # Create pipeline
-python recycle/cli.py cicd --cicd-command create-pipeline --pipeline-name production
+recycle cicd --cicd-command create-pipeline --pipeline-name production
 
 # List pipelines
-python recycle/cli.py cicd --cicd-command list-pipelines
+recycle cicd --cicd-command list-pipelines
 
 # Run pipeline
-python recycle/cli.py cicd --cicd-command run-pipeline --pipeline-name production
+recycle cicd --cicd-command run-pipeline --pipeline-name production
 ```
 
 ### `performance` - Performance Management
@@ -480,7 +485,7 @@ python recycle/cli.py cicd --cicd-command run-pipeline --pipeline-name productio
 Monitor and optimize performance.
 
 ```bash
-python recycle/cli.py performance --performance-command COMMAND [OPTIONS]
+recycle performance --performance-command COMMAND [OPTIONS]
 ```
 
 **Commands:**
@@ -499,13 +504,13 @@ python recycle/cli.py performance --performance-command COMMAND [OPTIONS]
 
 ```bash
 # Start monitoring
-python recycle/cli.py performance --performance-command monitor
+recycle performance --performance-command monitor
 
 # Show stats
-python recycle/cli.py performance --performance-command stats
+recycle performance --performance-command stats
 
 # Generate report
-python recycle/cli.py performance --performance-command report --output html
+recycle performance --performance-command report --output html
 ```
 
 ## Environment Variables
@@ -570,55 +575,55 @@ profiles:
 
 ```bash
 # Initialize project
-python recycle/cli.py init
+recycle init
 
 # Sync repositories
-python recycle/cli.py sync
+recycle sync
 
 # Run adapters
-python recycle/cli.py adapt
+recycle adapt
 
 # Generate bindings
-python recycle/cli.py bind --generators pybind11 grpc
+recycle bind --generators pybind11 grpc
 
 # Build with Bazel
-python recycle/cli.py build --target cpp-engine --bazel --profile release
+recycle build --target cpp-engine --bazel --profile release
 
 # Distribute packages
-python recycle/cli.py distribute --target python-core
+recycle distribute --target python-core
 ```
 
 ### Advanced Usage
 
 ```bash
 # Parallel processing
-python recycle/cli.py sync --jobs 8
-python recycle/cli.py adapt --parallel
+recycle sync --jobs 8
+recycle adapt --parallel
 
 # Selective operations
-python recycle/cli.py sync --repo python-core
-python recycle/cli.py adapt --repo python-core --adapter ruff
+recycle sync --repo python-core
+recycle adapt --repo python-core --adapter ruff
 
 # Build with profiles
-python recycle/cli.py build --target cpp-engine --profile debug
-python recycle/cli.py build --target cpp-engine --profile release --bazel
+recycle build --target cpp-engine --profile debug
+recycle build --target cpp-engine --profile release --bazel
 
 # Team collaboration
-python recycle/cli.py team --team-command add-user --username bob --role admin
-python recycle/cli.py cicd --cicd-command create-pipeline --pipeline-name staging
+recycle team --team-command add-user --username bob --role admin
+recycle cicd --cicd-command create-pipeline --pipeline-name staging
 ```
 
 ## Help and Support
 
 ```bash
 # Show help
-python recycle/cli.py --help
+recycle --help
 
 # Show command help
-python recycle/cli.py sync --help
+recycle sync --help
 
 # Show version
-python recycle/cli.py --version
+recycle --version
 ```
 
 For more information, see the [main documentation](../README.md) or visit our [GitHub repository](https://github.com/fraware/universal-recycle).

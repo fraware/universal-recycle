@@ -7,8 +7,7 @@ with helpful error messages and suggestions.
 
 import os
 import yaml
-from typing import Dict, List, Any, Tuple, Optional
-from pathlib import Path
+from typing import Dict, List, Tuple, Optional
 
 
 class ValidationError(Exception):
@@ -59,9 +58,7 @@ def validate_repos_manifest(manifest_path: str) -> Tuple[bool, List[str]]:
     # Validate each repository
     for i, repo in enumerate(repos):
         if not isinstance(repo, dict):
-            errors.append(
-                f"Repository {i+1}: Expected dictionary, got {type(repo).__name__}"
-            )
+            errors.append(f"Repository {i+1}: Expected dictionary, got {type(repo).__name__}")
             continue
 
         # Required fields
@@ -173,9 +170,7 @@ def validate_cache_config(config_path: str) -> Tuple[bool, List[str]]:
 
     for i, backend in enumerate(backends):
         if not isinstance(backend, dict):
-            errors.append(
-                f"Backend {i+1}: Expected dictionary, got {type(backend).__name__}"
-            )
+            errors.append(f"Backend {i+1}: Expected dictionary, got {type(backend).__name__}")
             continue
 
         backend_type = backend.get("type")
@@ -193,17 +188,13 @@ def validate_cache_config(config_path: str) -> Tuple[bool, List[str]]:
         if backend_type == "local":
             cache_dir = backend.get("cache_dir")
             if not cache_dir:
-                errors.append(
-                    f"Backend {i+1}: Local backend requires 'cache_dir' field"
-                )
+                errors.append(f"Backend {i+1}: Local backend requires 'cache_dir' field")
 
         elif backend_type == "redis":
             required_fields = ["host", "port"]
             for field in required_fields:
                 if field not in backend:
-                    errors.append(
-                        f"Backend {i+1}: Redis backend requires '{field}' field"
-                    )
+                    errors.append(f"Backend {i+1}: Redis backend requires '{field}' field")
 
         elif backend_type == "s3":
             required_fields = ["bucket_name", "region_name"]
@@ -215,9 +206,7 @@ def validate_cache_config(config_path: str) -> Tuple[bool, List[str]]:
             required_fields = ["bucket_name", "project_id"]
             for field in required_fields:
                 if field not in backend:
-                    errors.append(
-                        f"Backend {i+1}: GCS backend requires '{field}' field"
-                    )
+                    errors.append(f"Backend {i+1}: GCS backend requires '{field}' field")
 
     return len(errors) == 0, errors
 
@@ -369,29 +358,19 @@ def suggest_fixes(errors: Dict[str, List[str]]) -> Dict[str, List[str]]:
                 )
 
             elif "Unknown binding" in error:
-                config_suggestions.append(
-                    "Use valid bindings: pybind11, pyo3, cgo, wasm, grpc"
-                )
+                config_suggestions.append("Use valid bindings: pybind11, pyo3, cgo, wasm, grpc")
 
             elif "Invalid git URL" in error:
-                config_suggestions.append(
-                    "Use a valid git URL starting with 'http' or 'git@'"
-                )
+                config_suggestions.append("Use a valid git URL starting with 'http' or 'git@'")
 
             elif "Invalid YAML syntax" in error:
-                config_suggestions.append(
-                    "Check your YAML syntax, ensure proper indentation"
-                )
+                config_suggestions.append("Check your YAML syntax, ensure proper indentation")
 
             elif "No repositories defined" in error:
-                config_suggestions.append(
-                    "Add at least one repository to your manifest"
-                )
+                config_suggestions.append("Add at least one repository to your manifest")
 
             else:
-                config_suggestions.append(
-                    "Review the configuration format in the documentation"
-                )
+                config_suggestions.append("Review the configuration format in the documentation")
 
         if config_suggestions:
             suggestions[config_type] = config_suggestions

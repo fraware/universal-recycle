@@ -10,8 +10,7 @@ import json
 import yaml
 import subprocess
 import logging
-from pathlib import Path
-from typing import Dict, List, Any, Optional, Union
+from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
 import tempfile
 import shutil
@@ -67,7 +66,7 @@ class PyPIDistributionEndpoint(DistributionEndpoint):
         """Validate PyPI credentials."""
         try:
             # Check if twine is available
-            result = subprocess.run(
+            subprocess.run(
                 ["twine", "--version"], capture_output=True, text=True, check=True
             )
             self.log("Twine is available")
@@ -99,9 +98,7 @@ class PyPIDistributionEndpoint(DistributionEndpoint):
             # Find the built packages
             dist_dir = os.path.join(source_path, "dist")
             if os.path.exists(dist_dir):
-                packages = [
-                    f for f in os.listdir(dist_dir) if f.endswith((".tar.gz", ".whl"))
-                ]
+                packages = [f for f in os.listdir(dist_dir) if f.endswith((".tar.gz", ".whl"))]
                 if packages:
                     self.log(f"Built packages: {packages}")
                     return dist_dir
@@ -217,9 +214,7 @@ class NpmDistributionEndpoint(DistributionEndpoint):
             if is_scoped:
                 cmd.append("--access", "public")
 
-            subprocess.run(
-                cmd, cwd=package_path, check=True, capture_output=True, text=True
-            )
+            subprocess.run(cmd, cwd=package_path, check=True, capture_output=True, text=True)
             self.log("Successfully published to npm")
             return True
 
@@ -238,7 +233,7 @@ class VcpkgDistributionEndpoint(DistributionEndpoint):
         """Validate vcpkg credentials."""
         try:
             # Check if git is available
-            result = subprocess.run(
+            subprocess.run(
                 ["git", "--version"], capture_output=True, text=True, check=True
             )
             self.log("Git is available")
@@ -287,9 +282,7 @@ class VcpkgDistributionEndpoint(DistributionEndpoint):
             shutil.rmtree(temp_dir, ignore_errors=True)
             return ""
 
-    def _create_portfile_cmake(
-        self, portfile_path: str, package_name: str, source_path: str
-    ):
+    def _create_portfile_cmake(self, portfile_path: str, package_name: str, source_path: str):
         """Create a basic portfile.cmake for the package."""
         portfile_content = f"""# Auto-generated portfile.cmake for {package_name}
 vcpkg_from_github(
@@ -433,9 +426,7 @@ class GoModulesDistributionEndpoint(DistributionEndpoint):
         """Validate Go modules credentials."""
         try:
             # Check if go is available
-            result = subprocess.run(
-                ["go", "version"], capture_output=True, text=True, check=True
-            )
+            subprocess.run(["go", "version"], capture_output=True, text=True, check=True)
             self.log("Go is available")
             return True
         except (subprocess.CalledProcessError, FileNotFoundError):
@@ -489,8 +480,8 @@ class GoModulesDistributionEndpoint(DistributionEndpoint):
 
             self.log(f"Go module {module_name} prepared for distribution")
             self.log("To publish, create a git tag and push to the repository:")
-            self.log(f"  git tag v1.0.0")
-            self.log(f"  git push origin v1.0.0")
+            self.log("  git tag v1.0.0")
+            self.log("  git push origin v1.0.0")
 
             return True
 
@@ -553,9 +544,7 @@ class DistributionManager:
                     self.endpoints[endpoint_name] = endpoint
                     logger.info(f"Initialized {endpoint_type} distribution endpoint")
                 else:
-                    logger.warning(
-                        f"Failed to validate credentials for {endpoint_type}"
-                    )
+                    logger.warning(f"Failed to validate credentials for {endpoint_type}")
 
             except Exception as e:
                 logger.error(f"Failed to initialize {endpoint_type} endpoint: {e}")
@@ -564,9 +553,7 @@ class DistributionManager:
         """Get a distribution endpoint by name."""
         return self.endpoints.get(endpoint_name)
 
-    def get_endpoints_for_package_type(
-        self, package_type: str
-    ) -> List[DistributionEndpoint]:
+    def get_endpoints_for_package_type(self, package_type: str) -> List[DistributionEndpoint]:
         """Get all endpoints that can distribute the given package type."""
         return [
             endpoint
@@ -587,9 +574,7 @@ class DistributionManager:
         # Get applicable endpoints
         if target_endpoints:
             endpoints = [
-                self.endpoints[name]
-                for name in target_endpoints
-                if name in self.endpoints
+                self.endpoints[name] for name in target_endpoints if name in self.endpoints
             ]
         else:
             endpoints = self.get_endpoints_for_package_type(package_type)
@@ -641,9 +626,7 @@ class DistributionManager:
 def load_distribution_config(config_path: str) -> Dict[str, Any]:
     """Load distribution configuration from file."""
     if not os.path.exists(config_path):
-        logger.warning(
-            f"Distribution config not found at {config_path}, using defaults"
-        )
+        logger.warning(f"Distribution config not found at {config_path}, using defaults")
         return {"endpoints": {}}
 
     with open(config_path, "r") as f:
@@ -711,9 +694,7 @@ def distribute_packages(
                 source_path = repo_path
 
             if os.path.exists(source_path):
-                results = manager.distribute_package(
-                    source_path, package_type, package_config
-                )
+                results = manager.distribute_package(source_path, package_type, package_config)
                 repo_results[package_type] = results
 
         all_results[repo_name] = repo_results

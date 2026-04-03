@@ -246,13 +246,13 @@ __all__ = ['MyCustomAdapter']
 
 ```bash
 # Install your plugin
-python recycle/cli.py plugin --plugin-command install --plugin-path ./plugins/my-custom-adapter
+recycle plugin --plugin-command install --plugin-path ./plugins/my-custom-adapter
 
 # Check plugin health
-python recycle/cli.py plugin --plugin-command check --plugin-name my-custom-adapter
+recycle plugin --plugin-command check --plugin-name my-custom-adapter
 
 # Run your adapter
-python recycle/cli.py adapt --adapter my-custom-adapter
+recycle adapt --adapter my-custom-adapter
 ```
 
 ## Creating a Generator Plugin
@@ -468,10 +468,10 @@ __all__ = ['MyCustomGenerator']
 
 ```bash
 # Install your plugin
-python recycle/cli.py plugin --plugin-command install --plugin-path ./plugins/my-custom-generator
+recycle plugin --plugin-command install --plugin-path ./plugins/my-custom-generator
 
 # Generate bindings
-python recycle/cli.py bind --generators my-custom-generator
+recycle bind --generators my-custom-generator
 ```
 
 ## Creating a CLI Plugin
@@ -593,13 +593,13 @@ __all__ = ['MyCustomCLI', 'my_command', 'analyze_command']
 
 ```bash
 # Install your plugin
-python recycle/cli.py plugin --plugin-command install --plugin-path ./plugins/my-custom-cli
+recycle plugin --plugin-command install --plugin-path ./plugins/my-custom-cli
 
 # Run your command
-python recycle/cli.py my-command --name "Universal Recycle"
+recycle my-command --name "Universal Recycle"
 
 # Run analysis
-python recycle/cli.py analyze --repo ./repos/python-requests --output analysis.json
+recycle analyze --repo ./repos/my-library --output analysis.json
 ```
 
 ## Testing Your Plugin
@@ -668,13 +668,13 @@ if __name__ == '__main__':
 
 ```bash
 # Test plugin installation
-python recycle/cli.py plugin --plugin-command install --plugin-path ./plugins/my-custom-adapter
+recycle plugin --plugin-command install --plugin-path ./plugins/my-custom-adapter
 
 # Test plugin health
-python recycle/cli.py plugin --plugin-command check --plugin-name my-custom-adapter
+recycle plugin --plugin-command check --plugin-name my-custom-adapter
 
 # Test plugin functionality
-python recycle/cli.py adapt --adapter my-custom-adapter --repo ./repos/python-requests
+recycle adapt --adapter my-custom-adapter --repo ./repos/my-library
 ```
 
 ## Publishing Your Plugin
@@ -695,7 +695,9 @@ my-custom-adapter/
     └── test_adapter.py
 ```
 
-### 2. Create setup.py
+### 2. Create setup.py (or pyproject.toml)
+
+New projects should prefer a **[`pyproject.toml`](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/)** with a `[build-system]` and `[project]` table; the example below shows the older `setup.py` style for familiarity.
 
 ```python
 # setup.py
@@ -720,12 +722,12 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
     ],
-    python_requires=">=3.8",
+    python_requires=">=3.9",
     install_requires=[
         "requests>=2.25.0",
         "click>=8.0.0",
@@ -741,10 +743,11 @@ setup(
 ### 3. Publish to PyPI
 
 ```bash
-# Build package
-python setup.py sdist bdist_wheel
+# Build sdist and wheel (PEP 517)
+pip install build
+python -m build
 
-# Upload to PyPI
+# Upload to PyPI (prefer trusted publishing from CI; otherwise:)
 pip install twine
 twine upload dist/*
 ```
@@ -756,7 +759,7 @@ twine upload dist/*
 pip install universal-recycle-my-custom-adapter
 
 # Use your plugin
-python recycle/cli.py adapt --adapter my-custom-adapter
+recycle adapt --adapter my-custom-adapter
 ```
 
 ## Best Practices
@@ -797,20 +800,20 @@ python recycle/cli.py adapt --adapter my-custom-adapter
 ```bash
 # Enable debug logging
 export UNIVERSAL_RECYCLE_LOG_LEVEL=DEBUG
-python recycle/cli.py adapt --adapter my-custom-adapter
+recycle adapt --adapter my-custom-adapter
 ```
 
 ### Check Plugin Loading
 
 ```bash
 # List installed plugins
-python recycle/cli.py plugin --plugin-command list
+recycle plugin --plugin-command list
 
 # Check plugin health
-python recycle/cli.py plugin --plugin-command check --plugin-name my-custom-adapter
+recycle plugin --plugin-command check --plugin-name my-custom-adapter
 
 # Show plugin info
-python recycle/cli.py plugin --plugin-command info --plugin-name my-custom-adapter
+recycle plugin --plugin-command info --plugin-name my-custom-adapter
 ```
 
 ### Common Issues
